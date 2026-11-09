@@ -324,7 +324,7 @@ function renderRecords(){
   const list=ready?filtered():[];
   $("count").textContent=ready?`${list.length} of ${records.length} record(s) selected`:"Choose a filter to continue";
   $("dl").disabled=!list.length;$("print").disabled=!list.length;
-  $("rows").innerHTML=list.length?list.map((r,i)=>`<tr><td>${i+1}</td><td>${esc(r.reg)}</td><td>${esc(r.name)}</td><td>${esc(r.school)}</td><td>${esc(r.dept)}</td><td>${esc(r.unit)}</td><td>${esc(r.lec)}</td><td>${esc(r.sem)}</td><td>${esc(r.time)}</td><td>${modeNow==="claude"?"":`<button type="button" class="link" data-i="${records.indexOf(r)}">Delete</button>`}</td></tr>`).join(""):'<tr><td colspan="10" style="color:var(--muted)">No records for this selection.</td></tr>';
+  $("rows").innerHTML=list.length?list.map((r,i)=>`<tr><td>${i+1}</td><td>${esc(r.reg)}</td><td>${esc(r.name)}</td><td>${esc(r.school)}</td><td>${esc(r.dept)}</td><td>${esc(r.unit)}</td><td>${esc(r.lec)}</td><td>${esc(r.sem)}</td><td>${esc(r.time)}</td><td>${(modeNow==="claude"||(modeNow==="sb"&&!token))?"":`<button type="button" class="link" data-i="${records.indexOf(r)}">Delete</button>`}</td></tr>`).join(""):'<tr><td colspan="10" style="color:var(--muted)">No records for this selection.</td></tr>';
   $("rows").querySelectorAll("button[data-i]").forEach(b=>b.onclick=async()=>{
     const r=records[+b.dataset.i];
     if(modeNow==="sb"&&r.id){try{await sbFetch("/rest/v1/records?id=eq."+encodeURIComponent(r.id),{method:"DELETE"});await sbLoadRecords()}catch(e){say($("dlmsg"),"Could not delete: "+e.message,"err")}}
@@ -396,7 +396,7 @@ $("themeBtn").onclick=()=>setTheme(document.documentElement.getAttribute("data-t
 // ----- boot
 rebuildCatalog([]);resetUnits();$("adminCard").hidden=false;renderRecords();
 if(mode==="sb"){
-  $("adminCard").hidden=true;sbLoadCatalog();
+  $("adminCard").hidden=false;$("refresh").hidden=false;sbLoadCatalog();sbLoadRecords().catch(e=>say($("dlmsg"),"Could not load records: "+e.message,"err"));
   const showLogin=()=>{$("loginCard").hidden=!!token||location.hash!=="#reps"};
   showLogin();window.addEventListener("hashchange",showLogin);
 }
