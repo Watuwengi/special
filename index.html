@@ -173,6 +173,7 @@ const BUILTIN={
 "School of Social Sciences":["Sociology","Psychology","Criminology"],
 "School of Health Sciences":["Nursing","Public Health","Clinical Medicine"]
 };
+const normReg=s=>{const t=(s||"").toUpperCase().replace(/\s+/g,"");const m=t.match(/^([A-Z]+)[\/\-]?(\d{4})[\/\-]?(\d{3,6})$/);return m?m[1]+"/"+m[2]+"/"+m[3]:t};
 const clean=s=>(s||"").trim().replace(/\s+/g," ");
 const fmtUnit=(c,n)=>[clean(c).toUpperCase().replace(/\s/g,""),clean(n)].filter(Boolean).join(" ");
 const slug=s=>s.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,80)||"school";
@@ -193,6 +194,14 @@ async function sbFetch(path,opt={}){
   const r=await fetch(SB+path,{...opt,headers:{apikey:SUPABASE_ANON_KEY,...(token?{Authorization:"Bearer "+token}:{}),"Content-Type":"application/json",...(opt.headers||{})}});
   if(!r.ok){let m=r.statusText;try{const j=await r.json();m=j.message||j.msg||j.error_description||m}catch(e){}throw new Error(m)}
   return r.status===204?null:r.json().catch(()=>null);
+}
+async function sbInsertRecs(rows){
+  const url="/rest/v1/records?on_conflict=reg,code,sem",body=JSON.stringify(rows);
+  try{const r=await sbFetch(url,{method:"POST",headers:{Prefer:"resolution=ignore-duplicates,return=representation"},body});return Array.isArray(r)?r.length:rows.length}
+  catch(e){
+    if(/row-level|polic|permission/i.test(e.message)){await sbFetch(url,{method:"POST",headers:{Prefer:"resolution=ignore-duplicates,return=minimal"},body});return null}
+    throw e;
+  }
 }
 async function sbLoadCatalog(){try{const rows=await sbFetch("/rest/v1/schools?select=name,departments");dbDocs=rows.map(x=>({data:()=>x}));rebuildCatalog(dbDocs)}catch(e){}}
 async function sbAddDept(school,dept){
@@ -269,7 +278,7 @@ $("clear").onclick=()=>{resetAll();say($("msg"),"")};
 // ----- submit
 $("addRec").onclick=async()=>{
   if(Date.now()>DEADLINE)return say($("msg"),"Sorry, the deadline has passed and the form is closed.","err");
-  const reg=clean($("reg").value).toUpperCase(),name=clean($("name").value);
+  const reg=normReg($("reg").value),name=clean($("name").value);
   let school=$("school").value,dept=$("dept").value,addCat=false;
   if(school===NEW){school=clean($("newSchool").value);dept=clean($("newDept").value);
     if(!school||!dept)return say($("msg"),"A new school needs its name and at least one department.","err");addCat=true}
@@ -283,6 +292,9 @@ $("addRec").onclick=async()=>{
     time:clean(u.querySelector(".etime").value)}));
   for(const [i,u] of units.entries())
     if(!u.code||!u.name||!u.lec||!u.sem||!u.time)return say($("msg"),`Unit ${i+1}: complete the code, name, lecturer, semester and exam time.`,"err");
+  const seen=new Set();
+  for(const u of units){if(seen.has(u.code))return say($("msg"),`Unit ${u.code} is listed twice. Remove the repeat.`,"err");seen.add(u.code)}
+  let added=units.length;
   $("addRec").disabled=true;
   try{
     if(addCat){
@@ -295,14 +307,15 @@ $("addRec").onclick=async()=>{
     }
     const base={reg,name,school,dept};
     const recs=units.map(u=>({...base,code:u.code,uname:u.name,unit:fmtUnit(u.code,u.name),lec:u.lec,sem:u.sem,time:u.time,ts:Date.now()}));
-    if(modeNow==="sb")await sbFetch("/rest/v1/records",{method:"POST",headers:{Prefer:"return=minimal"},body:JSON.stringify(recs.map(({ts,...r})=>r))});
+    if(modeNow==="sb"){const n=await sbInsertRecs(recs.map(({ts,...r})=>r));if(n!==null)added=n}
     else if(db){
       if(!uid)throw new Error("please sign in to claude.ai to submit.");
       const ref=db.collection("records").doc(uid);
       let old=[];try{const sn=await ref.get();if(sn.exists)old=sn.data().items||[]}catch(e){}
       await ref.set({items:[...old,...recs]});
     }else records.push(...recs);
-    say($("msg"),`Submitted ${units.length} unit(s) for ${name}.`+(addCat?" Your school/department has been added to the list.":""),"ok");
+    const skipped=units.length-added;
+    say($("msg"),(added?`Submitted ${added} unit(s) for ${name}.`:`Nothing new to save for ${name}.`)+(skipped?` ${skipped} unit(s) were already on the list for this registration number and were not added again.`:"")+(addCat?" Your school/department has been added to the list.":""),"ok");
     resetAll();renderRecords();
   }catch(e){say($("msg"),"Could not submit: "+((e&&e.message)||"please try again, or ask the owner to allow editing."),"err")}
   $("addRec").disabled=false;
