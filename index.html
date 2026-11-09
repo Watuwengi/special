@@ -355,7 +355,7 @@ $("print").onclick=()=>{
   const v=$("fScope").value,scope=v==="all"?"All schools":v==="school"?$("fSchool").value:$("fSchool").value+" – "+$("fDept").value;
   const by={};list.forEach(r=>{const k=r.lec||"(no lecturer)";(by[k]=by[k]||[]).push(r)});
   const parts=Object.keys(by).sort().map(k=>{
-    const rs=by[k].sort((a,b)=>a.unit.localeCompare(b.unit)||a.reg.localeCompare(b.reg));
+    const rs=by[k].sort((a,b)=>(a.unit||"").localeCompare(b.unit||"")||(a.reg||"").localeCompare(b.reg||""));
     return `<div class="lecgrp"><h2>Lecturer: ${esc(k)}</h2><table><thead><tr><th>#</th><th>Unit</th><th>Reg. No.</th><th>Name</th><th>School / Department</th><th>Semester</th><th>Exam time</th></tr></thead><tbody>${rs.map((r,i)=>`<tr><td>${i+1}</td><td>${esc(r.unit)}</td><td>${esc(r.reg)}</td><td>${esc(r.name)}</td><td>${esc(r.school)} / ${esc(r.dept)}</td><td>${esc(r.sem)}</td><td>${esc(r.time)}</td></tr>`).join("")}</tbody></table></div>`}).join("");
   $("printArea").innerHTML=`<h1>Missing / Special Marks Requests</h1><div>${esc(scope)} &middot; ${list.length} request(s) &middot; printed ${esc(new Date().toLocaleDateString())}</div>${parts}`;
   try{window.print()}catch(e){say($("dlmsg"),"Printing is not available here. Download the spreadsheet and print it instead.","err")}
