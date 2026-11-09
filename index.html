@@ -395,7 +395,11 @@ $("themeBtn").onclick=()=>setTheme(document.documentElement.getAttribute("data-t
 
 // ----- boot
 rebuildCatalog([]);resetUnits();$("adminCard").hidden=false;renderRecords();
-if(mode==="sb"){$("adminCard").hidden=true;$("loginCard").hidden=false;sbLoadCatalog()}
+if(mode==="sb"){
+  $("adminCard").hidden=true;sbLoadCatalog();
+  const showLogin=()=>{$("loginCard").hidden=!!token||location.hash!=="#reps"};
+  showLogin();window.addEventListener("hashchange",showLogin);
+}
 (async()=>{
   if(mode==="sb")return;
   try{
