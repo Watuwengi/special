@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Missing &amp; Special Marks Form</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root{--bg:#f2f6fd;--card:#fff;--text:#0b3a8a;--muted:#4a6a9c;--line:#cfdcf1;--accent:#1f6feb;--accent-t:#fff;--ok:#1a7f4b;--danger:#c0392b;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root[data-theme="dark"]{--bg:#0e1626;--card:#16213a;--text:#cfe2ff;--muted:#8fa9d6;--line:#2a3a5e;--accent:#5b9cff;--accent-t:#0b1220;--ok:#4cc38a;--danger:#ff7b6b}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:900px;margin:0 auto;padding:20px 16px 40px}
+h1{font-size:22px;margin:0 0 2px}
+.sub{color:var(--muted);margin:0 0 18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:14px}
+.card h2{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+@media(max-width:600px){.grid{grid-template-columns:1fr}}
+label{display:block;font-size:13px;color:var(--muted);margin-bottom:4px}
+input,select{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--text);font:inherit}
+input:focus,select:focus{outline:2px solid var(--accent)}
+.unit{border:1px dashed var(--line);border-radius:10px;padding:12px;margin-bottom:10px}
+.unit-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.preview{font-weight:600;color:var(--ok);min-height:1.5em}
+.span2{grid-column:1/-1}
+.note{font-size:13px;color:var(--muted);margin:0}
+header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+#themeBtn{white-space:nowrap}
+button{font:inherit;border:1px solid var(--line);background:var(--card);color:var(--text);padding:9px 14px;border-radius:8px;cursor:pointer}
+button.primary{background:var(--accent);color:var(--accent-t);border-color:var(--accent);font-weight:600}
+button.link{border:none;background:none;color:var(--danger);padding:2px 6px}
+button:disabled{opacity:.5;cursor:not-allowed}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.msg{margin-top:10px;font-size:14px;min-height:1.4em}
+.msg.err{color:var(--danger)}.msg.ok{color:var(--ok)}
+.tablewrap{overflow-x:auto;margin-top:12px}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;white-space:nowrap}
+th{color:var(--muted);font-weight:600}
+[hidden]{display:none!important}
+.notice{border-color:var(--danger);background:color-mix(in srgb,var(--danger) 8%,var(--card))}
+.notice strong{font-size:16px}
+.cd{display:block;color:var(--danger);font-weight:600;margin-top:2px}
+.card p{margin:0 0 8px}.card ol,.card ul{margin:6px 0 10px;padding-left:20px}.card li{margin-bottom:4px}
+a.btn{display:inline-block;text-decoration:none;font:inherit;border:1px solid var(--line);background:var(--card);color:var(--text);padding:9px 14px;border-radius:8px}
+#printArea{display:none}
+@media print{
+  body{background:#fff;color:#000}
+  .wrap{display:none!important}
+  #printArea{display:block!important;font:12px/1.4 system-ui,sans-serif;color:#000}
+  #printArea h1{font-size:16px;margin:0 0 4px}#printArea h2{font-size:14px;margin:18px 0 6px;page-break-after:avoid}
+  #printArea table{border-collapse:collapse;width:100%}#printArea th,#printArea td{border:1px solid #777;padding:4px 6px;text-align:left;white-space:normal}
+  .lecgrp{page-break-inside:avoid;margin-bottom:12px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div><h1>Missing &amp; Special Marks Form</h1>
+    <p class="sub">For students with missing marks or special exam results.</p></div>
+    <button type="button" id="themeBtn" aria-label="Switch colour theme"></button>
+  </header>
+
+  <div class="card notice">
+    <strong>Deadline: Tuesday, 10 November 2026 at 1:00 PM</strong>
+    <span class="cd" id="countdown"></span>
+    <p style="margin-top:6px">Submit before the deadline. After that the form closes and your request can&rsquo;t be included in what goes to lecturers.</p>
+  </div>
+
+  <div class="card">
+    <h2>About this form</h2>
+    <p>Use this form if a result for one of your units is missing from your portal or results slip (a missing mark, or a special exam result that was never posted). Your class representatives will collect all submissions, print them and send them to the relevant lecturers so they can look into each case.</p>
+    <p><strong>Before you start, have ready:</strong></p>
+    <ul>
+      <li>Your registration number and full name</li>
+      <li>Your school/faculty and department</li>
+      <li>For each unit: the unit code and name (e.g. <em>BIT456 Data Engineering</em>), your lecturer&rsquo;s name, and the semester</li>
+    </ul>
+    <p><strong>How to fill it in:</strong></p>
+    <ol>
+      <li>Enter your details and pick your school and department. If yours isn&rsquo;t listed, choose &ldquo;Not listed &ndash; add new&rdquo; (a school needs at least one department).</li>
+      <li>Add each unit with a missing result. Use &ldquo;Add another unit&rdquo; for more than one.</li>
+      <li>Choose the semester (Sem 1 2026 or Sem 2 2026). The exam period fills in automatically.</li>
+      <li>Check everything, then press <strong>Submit</strong>.</li>
+    </ol>
+    <p><strong>Please tell your classmates and friends in other classes and schools</strong> who have missing marks. Everyone has to submit their own form before the deadline.</p>
+    <div class="row">
+      <a class="btn primary" id="wa" target="_blank" rel="noopener">Share on WhatsApp</a>
+      <button type="button" id="copyLink">Copy link</button>
+    </div>
+    <div class="msg" id="shareMsg"></div>
+  </div>
+
+  <div class="card">
+    <h2>Student details</h2>
+    <div class="grid">
+      <div><label for="reg">Registration number</label><input id="reg" placeholder="e.g. BSCCS/2022/31309" autocomplete="off"></div>
+      <div><label for="name">Full name</label><input id="name" placeholder="As on your records" autocomplete="name"></div>
+      <div><label for="school">School / Faculty</label><select id="school"></select></div>
+      <div><label for="dept">Department</label><select id="dept"></select></div>
+      <div id="newSchoolWrap" hidden><label for="newSchool">New school / faculty name</label><input id="newSchool" placeholder="e.g. School of Law"></div>
+      <div id="newDeptWrap" hidden><label for="newDept">New department name</label><input id="newDept" placeholder="e.g. Private Law"></div>
+      <p class="note span2">Not listed? Choose &ldquo;Not listed &ndash; add new&rdquo;. A new school must come with at least one department, and once you submit it is added to the lists for everyone.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Missing unit results</h2>
+    <div id="units"></div>
+    <button type="button" id="addUnit">+ Add another unit</button>
+  </div>
+
+  <div class="card">
+    <h2>Submit</h2>
+    <div class="row" style="margin-top:0">
+      <button type="button" class="primary" id="addRec">Submit</button>
+      <button type="button" id="clear">Clear form</button>
+    </div>
+    <div class="msg" id="msg"></div>
+  </div>
+
+  <div class="card" id="loginCard" hidden>
+    <h2>Class representatives &ndash; sign in</h2>
+    <div class="grid">
+      <div><label for="lemail">Email</label><input id="lemail" type="email" autocomplete="username"></div>
+      <div><label for="lpass">Password</label><input id="lpass" type="password" autocomplete="current-password"></div>
+    </div>
+    <div class="row"><button type="button" class="primary" id="login">Sign in</button></div>
+    <div class="msg" id="loginMsg"></div>
+  </div>
+
+  <div class="card" id="adminCard" hidden>
+    <h2>Collected records &amp; export</h2>
+    <div class="grid">
+      <div><label for="fScope">Generate sheet for</label>
+        <select id="fScope"><option value="all">All records</option><option value="school">A school</option><option value="dept">A school and department</option></select></div>
+      <div id="fSchoolWrap" hidden><label for="fSchool">School / Faculty</label><select id="fSchool"></select></div>
+      <div id="fDeptWrap" hidden><label for="fDept">Department</label><select id="fDept"></select></div>
+    </div>
+    <div class="row">
+      <button type="button" class="primary" id="dl" disabled>Generate &amp; download (.xlsx)</button>
+      <button type="button" id="print" disabled>Print for lecturers</button>
+      <button type="button" id="refresh" hidden>Refresh</button>
+      <span class="note" style="align-self:center" id="count"></span>
+    </div>
+    <div class="msg" id="dlmsg"></div>
+    <div class="tablewrap"><table>
+      <thead><tr><th>#</th><th>Reg. No.</th><th>Name</th><th>School</th><th>Department</th><th>Unit</th><th>Lecturer</th><th>Semester</th><th>Exam time</th><th></th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table></div>
+  </div>
+</div>
+
+<div id="printArea"></div>
+<script>
+// ===== Supabase (optional). Leave empty to use the built-in storage. See supabase-setup.sql =====
+const SUPABASE_URL="https://vdiljdqgbkuugmgdqhvq.supabase.co";        // e.g. https://abcdxyz.supabase.co
+const SUPABASE_ANON_KEY="sb_publishable_gwAGNlvc1h7WqxFO_agjMQ_29ci2FYE";   // the project's public anon key
+// ================================================================================================
+const DEADLINE=new Date("2026-11-10T13:00:00+03:00");
+const $=id=>document.getElementById(id);
+const NEW="__new__";
+const SEMS={"Sem 1 2026":"Jan - Apr 2026","Sem 2 2026":"May - Aug 2026"};
+const BUILTIN={
+"School of Computing and Informatics":["Computer Science","Information Technology","Software Engineering","Business Information Technology"],
+"School of Pure and Applied Sciences":["Mathematics and Statistics","Physics","Chemistry","Biological Sciences"],
+"School of Business and Economics":["Accounting and Finance","Business Administration","Economics","Procurement and Supply Chain"],
+"School of Engineering and Technology":["Electrical Engineering","Civil Engineering","Mechanical Engineering"],
+"School of Education":["Educational Foundations","Curriculum and Instruction","Educational Management"],
+"School of Social Sciences":["Sociology","Psychology","Criminology"],
+"School of Health Sciences":["Nursing","Public Health","Clinical Medicine"]
+};
+const clean=s=>(s||"").trim().replace(/\s+/g," ");
+const fmtUnit=(c,n)=>[clean(c).toUpperCase().replace(/\s/g,""),clean(n)].filter(Boolean).join(" ");
+const slug=s=>s.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,80)||"school";
+function say(el,t,cls){el.textContent=t;el.className="msg "+(cls||"")}
+function fill(sel,items,placeholder,addNew){
+  sel.innerHTML="";
+  const o=(v,t,dis)=>{const e=document.createElement("option");e.value=v;e.textContent=t;if(dis)e.disabled=true;sel.appendChild(e);return e};
+  o("",placeholder);
+  items.forEach(i=>o(i,i));
+  if(addNew)o(NEW,"Not listed – add new");
+}
+
+let db=null,isAdmin=true,localMode=true,uid=null;
+const mode=SUPABASE_URL&&SUPABASE_ANON_KEY?"sb":"local";   // becomes "claude" if the built-in db is found
+let modeNow=mode,token=null;
+const SB=SUPABASE_URL.replace(/\/+$/,"");
+async function sbFetch(path,opt={}){
+  const r=await fetch(SB+path,{...opt,headers:{apikey:SUPABASE_ANON_KEY,...(token?{Authorization:"Bearer "+token}:{}),"Content-Type":"application/json",...(opt.headers||{})}});
+  if(!r.ok){let m=r.statusText;try{const j=await r.json();m=j.message||j.msg||j.error_description||m}catch(e){}throw new Error(m)}
+  return r.status===204?null:r.json().catch(()=>null);
+}
+async function sbLoadCatalog(){try{const rows=await sbFetch("/rest/v1/schools?select=name,departments");dbDocs=rows.map(x=>({data:()=>x}));rebuildCatalog(dbDocs)}catch(e){}}
+async function sbAddDept(school,dept){
+  const old=await sbFetch("/rest/v1/schools?select=departments&name=eq."+encodeURIComponent(school));
+  const ds=[...new Set([...((old&&old[0]&&old[0].departments)||[]),dept])];
+  await sbFetch("/rest/v1/schools?on_conflict=name",{method:"POST",headers:{Prefer:"resolution=merge-duplicates,return=minimal"},body:JSON.stringify({name:school,departments:ds})});
+  await sbLoadCatalog();
+}
+async function sbLoadRecords(){
+  const rows=await sbFetch("/rest/v1/records?select=*&order=created_at.asc&limit=5000");
+  records=rows.map(r=>({id:r.id,reg:r.reg,name:r.name,school:r.school,dept:r.dept,code:r.code,uname:r.uname,unit:r.unit,lec:r.lec,sem:r.sem,time:r.time,ts:Date.parse(r.created_at)}));
+  renderRecords();
+}
+let catalog={};                       // school -> [departments]
+let records=[];                       // {id?, ...}
+let localCat={};                      // additions made while offline
+function rebuildCatalog(dbDocs){
+  const c={};
+  for(const k in BUILTIN)c[k]=[...BUILTIN[k]];
+  const merge=(n,ds)=>{if(!n)return;c[n]=[...new Set([...(c[n]||[]),...ds])]};
+  for(const k in localCat)merge(k,localCat[k]);
+  dbDocs.forEach(d=>{const x=d.data()||{};if(typeof x.name==="string"&&Array.isArray(x.departments))merge(clean(x.name),x.departments.filter(s=>typeof s==="string").map(clean).filter(Boolean))});
+  Object.keys(c).forEach(k=>c[k].sort());
+  catalog=Object.fromEntries(Object.keys(c).sort().map(k=>[k,c[k]]));
+  renderCatalog();
+}
+let dbDocs=[];
+function renderCatalog(){
+  const s=$("school").value,d=$("dept").value;
+  fill($("school"),Object.keys(catalog),"Select school / faculty",true);
+  if(catalog[s]||s===NEW)$("school").value=s;
+  syncDept(d);
+  const fs=$("fSchool").value;
+  fill($("fSchool"),Object.keys(catalog),"Select school / faculty");
+  if(catalog[fs])$("fSchool").value=fs;
+  syncFDept();
+}
+function syncDept(keep){
+  const s=$("school").value;
+  const isNewSchool=s===NEW;
+  $("newSchoolWrap").hidden=!isNewSchool;
+  fill($("dept"),catalog[s]||[],s?"Select department":"Select a school first",!isNewSchool&&!!s);
+  if(isNewSchool){$("dept").innerHTML='<option value="'+NEW+'">Enter department below</option>';}
+  if(keep&&[...$("dept").options].some(o=>o.value===keep))$("dept").value=keep;
+  $("newDeptWrap").hidden=!(isNewSchool||$("dept").value===NEW);
+}
+$("school").onchange=()=>syncDept();
+$("dept").onchange=()=>{$("newDeptWrap").hidden=!($("school").value===NEW||$("dept").value===NEW)};
+
+// ----- units
+function addUnitRow(){
+  const d=document.createElement("div");d.className="unit";
+  d.innerHTML=`<div class="unit-head"><div class="preview"></div><button type="button" class="link">Remove</button></div>
+  <div class="grid">
+    <div><label>Unit code</label><input class="code" placeholder="BIT456" autocapitalize="characters"></div>
+    <div><label>Unit name</label><input class="uname" placeholder="Data Engineering"></div>
+    <div><label>Lecturer</label><input class="lec" placeholder="Name of lecturer"></div>
+    <div><label>Semester</label><select class="sem"><option value="">Select</option>
+      <option>Sem 1 2026</option><option>Sem 2 2026</option><option disabled>Semester 3 (not available)</option></select></div>
+    <div class="span2"><label>Semester exam time</label><input class="etime" placeholder="Fills in when you pick a semester"></div>
+  </div>`;
+  const q=s=>d.querySelector(s);
+  const upd=()=>q(".preview").textContent=fmtUnit(q(".code").value,q(".uname").value);
+  q(".code").oninput=upd;q(".uname").oninput=upd;
+  q(".sem").onchange=()=>{q(".etime").value=SEMS[q(".sem").value]||""};
+  q(".link").onclick=()=>{if($("units").children.length>1)d.remove()};
+  $("units").appendChild(d);
+}
+$("addUnit").onclick=addUnitRow;
+function resetUnits(){$("units").innerHTML="";addUnitRow()}
+function resetAll(){["reg","name","newSchool","newDept"].forEach(i=>$(i).value="");$("school").value="";syncDept();resetUnits()}
+$("clear").onclick=()=>{resetAll();say($("msg"),"")};
+
+// ----- submit
+$("addRec").onclick=async()=>{
+  if(Date.now()>DEADLINE)return say($("msg"),"Sorry, the deadline has passed and the form is closed.","err");
+  const reg=clean($("reg").value).toUpperCase(),name=clean($("name").value);
+  let school=$("school").value,dept=$("dept").value,addCat=false;
+  if(school===NEW){school=clean($("newSchool").value);dept=clean($("newDept").value);
+    if(!school||!dept)return say($("msg"),"A new school needs its name and at least one department.","err");addCat=true}
+  else if(dept===NEW){dept=clean($("newDept").value);if(!dept)return say($("msg"),"Enter the new department name.","err");addCat=true}
+  if(!reg||!name||!school||!dept)return say($("msg"),"Please fill in registration number, name, school/faculty and department.","err");
+  const units=[...$("units").children].map(u=>({
+    code:clean(u.querySelector(".code").value).toUpperCase().replace(/\s/g,""),
+    name:clean(u.querySelector(".uname").value),
+    lec:clean(u.querySelector(".lec").value),
+    sem:u.querySelector(".sem").value,
+    time:clean(u.querySelector(".etime").value)}));
+  for(const [i,u] of units.entries())
+    if(!u.code||!u.name||!u.lec||!u.sem||!u.time)return say($("msg"),`Unit ${i+1}: complete the code, name, lecturer, semester and exam time.`,"err");
+  $("addRec").disabled=true;
+  try{
+    if(addCat){
+      if(modeNow==="sb")await sbAddDept(school,dept);
+      else if(db){
+        const ref=db.collection("schools").doc(slug(school));
+        const snap=await ref.get();const old=snap.exists?(snap.data().departments||[]):[];
+        await ref.set({name:school,departments:[...new Set([...old,dept])]});
+      }else{localCat[school]=[...new Set([...(localCat[school]||[]),dept])];rebuildCatalog(dbDocs)}
+    }
+    const base={reg,name,school,dept};
+    const recs=units.map(u=>({...base,code:u.code,uname:u.name,unit:fmtUnit(u.code,u.name),lec:u.lec,sem:u.sem,time:u.time,ts:Date.now()}));
+    if(modeNow==="sb")await sbFetch("/rest/v1/records",{method:"POST",headers:{Prefer:"return=minimal"},body:JSON.stringify(recs.map(({ts,...r})=>r))});
+    else if(db){
+      if(!uid)throw new Error("please sign in to claude.ai to submit.");
+      const ref=db.collection("records").doc(uid);
+      let old=[];try{const sn=await ref.get();if(sn.exists)old=sn.data().items||[]}catch(e){}
+      await ref.set({items:[...old,...recs]});
+    }else records.push(...recs);
+    say($("msg"),`Submitted ${units.length} unit(s) for ${name}.`+(addCat?" Your school/department has been added to the list.":""),"ok");
+    resetAll();renderRecords();
+  }catch(e){say($("msg"),"Could not submit: "+((e&&e.message)||"please try again, or ask the owner to allow editing."),"err")}
+  $("addRec").disabled=false;
+};
+
+// ----- admin: filter, table, export
+$("fScope").onchange=()=>{const v=$("fScope").value;$("fSchoolWrap").hidden=v==="all";$("fDeptWrap").hidden=v!=="dept";syncFDept();renderRecords()};
+$("fSchool").onchange=()=>{syncFDept();renderRecords()};
+$("fDept").onchange=renderRecords;
+function syncFDept(){fill($("fDept"),catalog[$("fSchool").value]||[],$("fSchool").value?"Select department":"Select a school first")}
+function filtered(){
+  const v=$("fScope").value,s=$("fSchool").value,d=$("fDept").value;
+  return records.filter(r=>v==="all"||(r.school===s&&(v==="school"||r.dept===d)));
+}
+function esc(s){const d=document.createElement("div");d.textContent=s==null?"":String(s);return d.innerHTML}
+function renderRecords(){
+  const v=$("fScope").value,s=$("fSchool").value,d=$("fDept").value;
+  const ready=v==="all"||(v==="school"&&s)||(v==="dept"&&s&&d);
+  const list=ready?filtered():[];
+  $("count").textContent=ready?`${list.length} of ${records.length} record(s) selected`:"Choose a filter to continue";
+  $("dl").disabled=!list.length;$("print").disabled=!list.length;
+  $("rows").innerHTML=list.length?list.map((r,i)=>`<tr><td>${i+1}</td><td>${esc(r.reg)}</td><td>${esc(r.name)}</td><td>${esc(r.school)}</td><td>${esc(r.dept)}</td><td>${esc(r.unit)}</td><td>${esc(r.lec)}</td><td>${esc(r.sem)}</td><td>${esc(r.time)}</td><td>${modeNow==="claude"?"":`<button type="button" class="link" data-i="${records.indexOf(r)}">Delete</button>`}</td></tr>`).join(""):'<tr><td colspan="10" style="color:var(--muted)">No records for this selection.</td></tr>';
+  $("rows").querySelectorAll("button[data-i]").forEach(b=>b.onclick=async()=>{
+    const r=records[+b.dataset.i];
+    if(modeNow==="sb"&&r.id){try{await sbFetch("/rest/v1/records?id=eq."+encodeURIComponent(r.id),{method:"DELETE"});await sbLoadRecords()}catch(e){say($("dlmsg"),"Could not delete: "+e.message,"err")}}
+    else{records.splice(+b.dataset.i,1);renderRecords()}});
+}
+$("dl").onclick=async()=>{
+  const list=filtered();if(!list.length)return;
+  if(typeof XLSX==="undefined")return say($("dlmsg"),"Spreadsheet library failed to load. Reload and try again.","err");
+  const head=["No.","Registration Number","Name","School / Faculty","Department","Unit (Code + Name)","Unit Code","Unit Name","Lecturer","Semester","Semester Exam Time","Submitted"];
+  const aoa=[head,...list.map((r,i)=>[i+1,r.reg,r.name,r.school,r.dept,r.unit,r.code,r.uname,r.lec,r.sem,r.time,r.ts?new Date(r.ts).toLocaleString():""])];
+  const ws=XLSX.utils.aoa_to_sheet(aoa);
+  ws["!cols"]=head.map((h,c)=>({wch:Math.min(40,Math.max(h.length,...aoa.slice(1).map(r=>String(r[c]).length))+2)}));
+  const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,"Missing Marks");
+  const blob=new Blob([XLSX.write(wb,{type:"array",bookType:"xlsx"})],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
+  const v=$("fScope").value,part=v==="all"?"all":v==="school"?slug($("fSchool").value):slug($("fSchool").value)+"_"+slug($("fDept").value);
+  const fname=`missing-special-marks_${part}.xlsx`;
+  try{
+    const dls=await claude.use("downloads");
+    if(dls){await dls.save({filename:fname,data:blob});return say($("dlmsg"),"Spreadsheet ready.","ok")}
+  }catch(e){if(e&&e.code==="declined")return say($("dlmsg"),"Download cancelled.")}
+  try{const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=fname;document.body.appendChild(a);a.click();a.remove();say($("dlmsg"),"Spreadsheet downloaded.","ok")}
+  catch(e){say($("dlmsg"),"Could not save the file here.","err")}
+};
+
+// ----- print for lecturers (grouped by lecturer)
+$("print").onclick=()=>{
+  const list=filtered();if(!list.length)return;
+  const v=$("fScope").value,scope=v==="all"?"All schools":v==="school"?$("fSchool").value:$("fSchool").value+" – "+$("fDept").value;
+  const by={};list.forEach(r=>{const k=r.lec||"(no lecturer)";(by[k]=by[k]||[]).push(r)});
+  const parts=Object.keys(by).sort().map(k=>{
+    const rs=by[k].sort((a,b)=>a.unit.localeCompare(b.unit)||a.reg.localeCompare(b.reg));
+    return `<div class="lecgrp"><h2>Lecturer: ${esc(k)}</h2><table><thead><tr><th>#</th><th>Unit</th><th>Reg. No.</th><th>Name</th><th>School / Department</th><th>Semester</th><th>Exam time</th></tr></thead><tbody>${rs.map((r,i)=>`<tr><td>${i+1}</td><td>${esc(r.unit)}</td><td>${esc(r.reg)}</td><td>${esc(r.name)}</td><td>${esc(r.school)} / ${esc(r.dept)}</td><td>${esc(r.sem)}</td><td>${esc(r.time)}</td></tr>`).join("")}</tbody></table></div>`}).join("");
+  $("printArea").innerHTML=`<h1>Missing / Special Marks Requests</h1><div>${esc(scope)} &middot; ${list.length} request(s) &middot; printed ${esc(new Date().toLocaleDateString())}</div>${parts}`;
+  try{window.print()}catch(e){say($("dlmsg"),"Printing is not available here. Download the spreadsheet and print it instead.","err")}
+};
+$("refresh").onclick=()=>sbLoadRecords().catch(e=>say($("dlmsg"),e.message,"err"));
+$("login").onclick=async()=>{
+  say($("loginMsg"),"Signing in…");
+  try{
+    const r=await fetch(SB+"/auth/v1/token?grant_type=password",{method:"POST",headers:{apikey:SUPABASE_ANON_KEY,"Content-Type":"application/json"},body:JSON.stringify({email:$("lemail").value.trim(),password:$("lpass").value})});
+    const j=await r.json();if(!r.ok)throw new Error(j.msg||j.error_description||"Sign-in failed");
+    token=j.access_token;$("lpass").value="";$("loginCard").hidden=true;$("adminCard").hidden=false;$("refresh").hidden=false;
+    await sbLoadRecords();
+  }catch(e){say($("loginMsg"),e.message,"err")}
+};
+
+// ----- share + deadline
+const shareText="Missing marks? Submit your details before the deadline (Tue 10 Nov 2026, 1:00 PM): "+location.href;
+$("wa").href="https://wa.me/?text="+encodeURIComponent(shareText);
+$("copyLink").onclick=async()=>{try{await navigator.clipboard.writeText(location.href);say($("shareMsg"),"Link copied.","ok")}catch(e){say($("shareMsg"),"Copy this page\u2019s link from your browser\u2019s address bar.")}};
+function tick(){
+  const ms=DEADLINE-Date.now(),el=$("countdown");
+  if(ms<=0){el.textContent="Submissions are closed.";$("addRec").disabled=true;return}
+  const d=Math.floor(ms/864e5),h=Math.floor(ms%864e5/36e5),m=Math.floor(ms%36e5/6e4);
+  el.textContent=`Time left: ${d?d+"d ":""}${h}h ${m}m`;
+}
+tick();setInterval(tick,30000);
+
+// ----- theme (default: light with blue text)
+function setTheme(t,save){
+  document.documentElement.setAttribute("data-theme",t);
+  $("themeBtn").textContent=t==="dark"?"☀ Light mode":"🌙 Dark mode";
+  if(save){try{localStorage.setItem("msm-theme",t)}catch(e){}}
+}
+let saved=null;try{saved=localStorage.getItem("msm-theme")}catch(e){}
+setTheme(saved==="dark"?"dark":"light");
+$("themeBtn").onclick=()=>setTheme(document.documentElement.getAttribute("data-theme")==="dark"?"light":"dark",true);
+
+// ----- boot
+rebuildCatalog([]);resetUnits();$("adminCard").hidden=false;renderRecords();
+if(mode==="sb"){$("adminCard").hidden=true;$("loginCard").hidden=false;sbLoadCatalog()}
+(async()=>{
+  if(mode==="sb")return;
+  try{
+    const [d,user]=await Promise.all([claude.use("db"),claude.use("user")]);
+    if(!d)return;
+    db=d;localMode=false;modeNow="claude";
+    try{uid=user?await user.id():null}catch(e){}
+    isAdmin=!!(user&&(user.isOwner()||user.canEdit()));
+    $("adminCard").hidden=!isAdmin;
+    db.collection("schools").onSnapshot(s=>{dbDocs=s.docs;rebuildCatalog(dbDocs)},()=>{});
+    if(isAdmin)db.collection("records").onSnapshot(s=>{
+      records=s.docs.flatMap(x=>(x.data().items||[]).filter(i=>i&&typeof i==="object")).sort((a,b)=>(a.ts||0)-(b.ts||0));renderRecords()},()=>{});
+  }catch(e){}
+})();
+</script>
+</body>
+</html>
