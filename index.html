@@ -6,14 +6,12 @@
 <title>Missing &amp; Special Marks Form</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
-:root{--bg:#f2f6fd;--card:#fff;--text:#0b3a8a;--muted:#4a6a9c;--line:#cfdcf1;--accent:#1f6feb;--accent-t:#fff;--ok:#1a7f4b;--danger:#c0392b;--mark:#ffe38a;--mark-t:#1b1f27;
-box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root{--bg:#f2f6fd;--card:#fff;--text:#0b3a8a;--muted:#4a6a9c;--line:#cfdcf1;--accent:#1f6feb;--accent-t:#fff;--ok:#1a7f4b;--danger:#c0392b;--mark:#ffe38a;--mark-t:#1b1f27;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 :root[data-theme="dark"]{--bg:#0e1626;--card:#16213a;--text:#cfe2ff;--muted:#8fa9d6;--line:#2a3a5e;--accent:#5b9cff;--accent-t:#0b1220;--ok:#4cc38a;--danger:#ff7b6b;--mark:#7a6400;--mark-t:#fff}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-.wrap{max-width:900px;margin:0 auto;padding:20px 16px 40px}
-h1{font-size:22px;margin:0 0 2px}
-.sub{color:var(--muted);margin:0 0 18px}
+.wrap{max-width:960px;margin:0 auto;padding:20px 16px 40px}
+h1{font-size:22px;margin:0 0 2px}.sub{color:var(--muted);margin:0 0 18px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:14px}
 .card h2{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
 .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
@@ -24,172 +22,149 @@ input:focus,select:focus{outline:2px solid var(--accent)}
 .unit{border:1px dashed var(--line);border-radius:10px;padding:12px;margin-bottom:10px}
 .unit-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
 .preview{font-weight:600;color:var(--ok);min-height:1.5em}
-.span2{grid-column:1/-1}
+.span2{grid-column:1/-1}.hint{font-size:12px;color:var(--muted);margin-top:3px}
 .note{font-size:13px;color:var(--muted);margin:0}
 header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
-#themeBtn{white-space:nowrap}
 button{font:inherit;border:1px solid var(--line);background:var(--card);color:var(--text);padding:9px 14px;border-radius:8px;cursor:pointer}
 button.primary{background:var(--accent);color:var(--accent-t);border-color:var(--accent);font-weight:600}
 button.link{border:none;background:none;color:var(--danger);padding:2px 6px}
 button:disabled{opacity:.5;cursor:not-allowed}
-.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
-.msg{margin-top:10px;font-size:14px;min-height:1.4em}
-.msg.err{color:var(--danger)}.msg.ok{color:var(--ok)}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;align-items:center}
+.msg{margin-top:10px;font-size:14px;min-height:1.4em}.msg.err{color:var(--danger)}.msg.ok{color:var(--ok)}
 .tablewrap{overflow-x:auto;margin-top:12px}
 table{border-collapse:collapse;width:100%;font-size:13px}
 th,td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;white-space:nowrap}
 th{color:var(--muted);font-weight:600}
 [hidden]{display:none!important}
 mark{background:var(--mark);color:var(--mark-t);border-radius:3px;padding:0 1px}
-th.sortable{cursor:pointer;user-select:none}th.sortable:hover{color:var(--accent)}
-.arr{margin-left:4px;font-size:10px}
+th.sortable{cursor:pointer;user-select:none}th.sortable:hover{color:var(--accent)}.arr{margin-left:4px;font-size:10px}
 details.tips{margin-top:8px;font-size:13px;color:var(--muted)}details.tips summary{cursor:pointer}
-details.tips li{margin-bottom:2px}details.tips code{background:var(--bg);padding:1px 5px;border-radius:4px;color:var(--text)}
+details.tips code{background:var(--bg);padding:1px 5px;border-radius:4px;color:var(--text)}
 .notice{border-color:var(--danger);background:color-mix(in srgb,var(--danger) 8%,var(--card))}
-.notice strong{font-size:16px}
 .cd{display:block;color:var(--danger);font-weight:600;margin-top:2px}
-.card p{margin:0 0 8px}.card ol,.card ul{margin:6px 0 10px;padding-left:20px}.card li{margin-bottom:4px}
-a.btn{display:inline-block;text-decoration:none;font:inherit;border:1px solid var(--line);background:var(--card);color:var(--text);padding:9px 14px;border-radius:8px}
+.card p{margin:0 0 8px}.card ol,.card ul{margin:6px 0 10px;padding-left:20px}
+a.btn{display:inline-block;text-decoration:none;border:1px solid var(--line);background:var(--card);color:var(--text);padding:9px 14px;border-radius:8px}
+a.btn.primary{background:var(--accent);color:var(--accent-t);border-color:var(--accent)}
 #printArea{display:none}
 @media print{
-  body{background:#fff;color:#000}
-  .wrap{display:none!important}
-  #printArea{display:block!important;font:12px/1.4 system-ui,sans-serif;color:#000}
-  #printArea h1{font-size:16px;margin:0 0 4px}#printArea h2{font-size:14px;margin:18px 0 6px;page-break-after:avoid}
-  #printArea table{border-collapse:collapse;width:100%}#printArea th,#printArea td{border:1px solid #777;padding:4px 6px;text-align:left;white-space:normal}
-  .lecgrp{page-break-inside:avoid;margin-bottom:12px}
+ body{background:#fff;color:#000}.wrap{display:none!important}
+ #printArea{display:block!important;font:12px/1.4 system-ui,sans-serif;color:#000}
+ #printArea h1{font-size:16px;margin:0 0 4px}#printArea h2{font-size:14px;margin:0 0 2px}
+ #printArea .v{font-size:10px;color:#555;margin-bottom:4px}
+ #printArea table{border-collapse:collapse;width:100%}#printArea th,#printArea td{border:1px solid #777;padding:4px 6px;text-align:left;white-space:normal}
+ .lecgrp{page-break-inside:auto;margin-bottom:16px}.lecgrp h2{page-break-after:avoid}
 }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <header>
-    <div><h1>Missing &amp; Special Marks Form</h1>
-    <p class="sub">For students with missing marks or special exam results.</p></div>
-    <button type="button" id="themeBtn" aria-label="Switch colour theme"></button>
-  </header>
+<header>
+ <div><h1>Missing &amp; Special Marks Form</h1><p class="sub">For students with missing marks or special exam results.</p></div>
+ <button type="button" id="themeBtn" aria-label="Switch colour theme"></button>
+</header>
 
-  <div class="card notice">
-    <strong>Deadline: Tuesday, 10 November 2026 at 1:00 PM</strong>
-    <span class="cd" id="countdown"></span>
-    <p style="margin-top:6px">Submit before the deadline. After that the form closes and your request can&rsquo;t be included in what goes to lecturers.</p>
-  </div>
-
-  <div class="card">
-    <h2>About this form</h2>
-    <p>Use this form if a result for one of your units is missing from your portal or results slip (a missing mark, or a special exam result that was never posted). Your class representatives will collect all submissions, print them and send them to the relevant lecturers so they can look into each case.</p>
-    <p><strong>Before you start, have ready:</strong></p>
-    <ul>
-      <li>Your registration number and full name</li>
-      <li>Your school/faculty and department</li>
-      <li>For each unit: the unit code and name (e.g. <em>BIT456 Data Engineering</em>), your lecturer&rsquo;s name, and the semester</li>
-    </ul>
-    <p><strong>How to fill it in:</strong></p>
-    <ol>
-      <li>Enter your details and pick your school and department. If yours isn&rsquo;t listed, choose &ldquo;Not listed &ndash; add new&rdquo; (a school needs at least one department).</li>
-      <li>Add each unit with a missing result. Use &ldquo;Add another unit&rdquo; for more than one.</li>
-      <li>Choose the semester (Sem 1 2026 or Sem 2 2026). The exam period fills in automatically.</li>
-      <li>Check everything, then press <strong>Submit</strong>.</li>
-    </ol>
-    <p><strong>Please tell your classmates and friends in other classes and schools</strong> who have missing marks. Everyone has to submit their own form before the deadline.</p>
-    <div class="row">
-      <a class="btn primary" id="wa" target="_blank" rel="noopener">Share on WhatsApp</a>
-      <button type="button" id="copyLink">Copy link</button>
-    </div>
-    <div class="msg" id="shareMsg"></div>
-  </div>
-
-  <div class="card">
-    <h2>Student details</h2>
-    <div class="grid">
-      <div><label for="reg">Registration number</label><input id="reg" placeholder="e.g. BSCCS/2022/31309" autocomplete="off"></div>
-      <div><label for="name">Full name</label><input id="name" placeholder="As on your records" autocomplete="name"></div>
-      <div><label for="school">School / Faculty</label><select id="school"></select></div>
-      <div><label for="dept">Department</label><select id="dept"></select></div>
-      <div id="newSchoolWrap" hidden><label for="newSchool">New school / faculty name</label><input id="newSchool" placeholder="e.g. School of Law"></div>
-      <div id="newDeptWrap" hidden><label for="newDept">New department name</label><input id="newDept" placeholder="e.g. Private Law"></div>
-      <p class="note span2">Not listed? Choose &ldquo;Not listed &ndash; add new&rdquo;. A new school must come with at least one department, and once you submit it is added to the lists for everyone.</p>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>Missing unit results</h2>
-    <div id="units"></div>
-    <button type="button" id="addUnit">+ Add another unit</button>
-  </div>
-
-  <div class="card">
-    <h2>Submit</h2>
-    <div class="row" style="margin-top:0">
-      <button type="button" class="primary" id="addRec">Submit</button>
-      <button type="button" id="clear">Clear form</button>
-    </div>
-    <div class="msg" id="msg"></div>
-  </div>
-
-  <div class="card" id="loginCard" hidden>
-    <h2>Class representatives &ndash; sign in</h2>
-    <div class="grid">
-      <div><label for="lemail">Email</label><input id="lemail" type="email" autocomplete="username"></div>
-      <div><label for="lpass">Password</label><input id="lpass" type="password" autocomplete="current-password"></div>
-    </div>
-    <div class="row"><button type="button" class="primary" id="login">Sign in</button></div>
-    <div class="msg" id="loginMsg"></div>
-  </div>
-
-  <div class="card" id="adminCard" hidden>
-    <h2>Collected records &amp; export</h2>
-    <div class="grid">
-      <div><label for="fScope">Generate sheet for</label>
-        <select id="fScope"><option value="all">All records</option><option value="school">A school</option><option value="dept">A school and department</option></select></div>
-      <div id="fSchoolWrap" hidden><label for="fSchool">School / Faculty</label><select id="fSchool"></select></div>
-      <div id="fDeptWrap" hidden><label for="fDept">Department</label><select id="fDept"></select></div>
-    </div>
-    <div class="grid" style="margin-top:12px">
-      <div class="span2"><label for="q">Search anything</label>
-        <input id="q" type="search" placeholder="e.g.  nzeketha   ·   bhu1210 sandra   ·   lec:kalenywa   ·   &quot;church history&quot;   ·   -kiswahili" autocomplete="off"></div>
-      <div><label for="sortBy">Sort by</label>
-        <select id="sortBy">
-          <option value="auto">Auto (best match when searching, else name)</option>
-          <option value="name">Student name</option><option value="reg">Registration number</option>
-          <option value="code">Unit code</option><option value="lec">Lecturer</option>
-          <option value="sem">Semester</option><option value="school">School</option>
-          <option value="dept">Department</option><option value="time">Exam time</option>
-          <option value="ts">Date submitted</option></select></div>
-      <div><label for="sortDir">Order</label>
-        <select id="sortDir"><option value="asc">Ascending (A→Z, oldest first)</option><option value="desc">Descending (Z→A, newest first)</option></select></div>
-    </div>
-    <details class="tips"><summary>Search tips</summary>
-      <ul>
-        <li>Type any words: name, registration number, unit code or title, lecturer, school, semester. Every word must match, in any order, and typos are forgiven.</li>
-        <li><code>"church history"</code> matches the exact phrase. <code>-kiswahili</code> leaves those out.</li>
-        <li>Search one column: <code>lec:nzeketha</code> <code>code:BHU1210</code> <code>reg:2024/5</code> <code>name:sandra</code> <code>sem:"sem 2"</code></li>
-        <li>Find gaps: <code>no:lec</code> (no lecturer) <code>no:reg</code> <code>no:name</code> <code>no:dept</code></li>
-        <li>Click any column heading to sort by it, and click again to reverse.</li>
-      </ul></details>
-    <div class="row">
-      <button type="button" class="primary" id="dl" disabled>Generate &amp; download (.xlsx)</button>
-      <button type="button" id="print" disabled>Print for lecturers</button>
-      <button type="button" id="refresh" hidden>Refresh</button>
-      <span class="note" style="align-self:center" id="count"></span>
-    </div>
-    <div class="msg" id="dlmsg"></div>
-    <div class="tablewrap"><table>
-      <thead><tr><th>#</th><th class="sortable" data-k="reg">Reg. No.<span class="arr"></span></th><th class="sortable" data-k="name">Name<span class="arr"></span></th><th class="sortable" data-k="school">School<span class="arr"></span></th><th class="sortable" data-k="dept">Department<span class="arr"></span></th><th class="sortable" data-k="code">Unit<span class="arr"></span></th><th class="sortable" data-k="lec">Lecturer<span class="arr"></span></th><th class="sortable" data-k="sem">Semester<span class="arr"></span></th><th class="sortable" data-k="time">Exam time<span class="arr"></span></th><th></th></tr></thead>
-      <tbody id="rows"></tbody>
-    </table></div>
-  </div>
+<div class="card notice">
+ <strong>Deadline: Tuesday, 10 November 2026 at 1:00 PM</strong>
+ <span class="cd" id="countdown"></span>
+ <p style="margin-top:6px">Submit before the deadline. After that the form closes and your request can&rsquo;t be included in what goes to lecturers.</p>
 </div>
 
+<div class="card">
+ <h2>About this form</h2>
+ <p>Use this form if a result for one of your units is missing from your portal or results slip (a missing mark, or a special exam result that was never posted). Your class representatives will collect all submissions, print them and send them to the relevant lecturers.</p>
+ <p><strong>Have ready:</strong></p>
+ <ul><li>Your registration number and full name</li><li>Your school/faculty and department</li><li>For each unit: the unit code (letters and numbers only) and name, your lecturer&rsquo;s name, and the semester</li></ul>
+ <p><strong>How to fill it in:</strong></p>
+ <ol>
+  <li>Enter your details and pick your school and department. If yours isn&rsquo;t listed, choose &ldquo;Not listed &ndash; add new&rdquo;.</li>
+  <li>Add each unit with a missing result. Use &ldquo;Add another unit&rdquo; for more than one.</li>
+  <li>Choose the semester. The exam period fills in automatically.</li>
+  <li>Check everything, then press <strong>Submit</strong>.</li>
+ </ol>
+ <p><strong>Please tell your classmates and friends in other classes and schools</strong> who have missing marks. Everyone must submit their own form before the deadline.</p>
+ <div class="row"><a class="btn primary" id="wa" target="_blank" rel="noopener">Share on WhatsApp</a><button type="button" id="copyLink">Copy link</button></div>
+ <div class="msg" id="shareMsg"></div>
+</div>
+
+<div class="card">
+ <h2>Student details</h2>
+ <div class="grid">
+  <div><label for="reg">Registration number</label><input id="reg" placeholder="e.g. BSCCS/2022/31309" autocomplete="off"></div>
+  <div><label for="name">Full name</label><input id="name" placeholder="As on your records" autocomplete="name"></div>
+  <div><label for="school">School / Faculty</label><select id="school"></select></div>
+  <div><label for="dept">Department</label><select id="dept"></select></div>
+  <div id="newSchoolWrap" hidden><label for="newSchool">New school / faculty name</label><input id="newSchool" placeholder="e.g. School of Law"></div>
+  <div id="newDeptWrap" hidden><label for="newDept">New department name</label><input id="newDept" placeholder="e.g. Private Law"></div>
+  <p class="note span2">Not listed? Choose &ldquo;Not listed &ndash; add new&rdquo;. A new school must come with at least one department.</p>
+ </div>
+</div>
+
+<div class="card">
+ <h2>Missing unit results</h2>
+ <div id="units"></div>
+ <button type="button" id="addUnit">+ Add another unit</button>
+</div>
+
+<div class="card">
+ <h2>Submit</h2>
+ <div class="row" style="margin-top:0"><button type="button" class="primary" id="addRec">Submit</button><button type="button" id="clear">Clear form</button></div>
+ <div class="msg" id="msg"></div>
+</div>
+
+<div class="card" id="loginCard" hidden>
+ <h2>Class representatives &ndash; sign in</h2>
+ <div class="grid">
+  <div><label for="lemail">Email</label><input id="lemail" type="email" autocomplete="username"></div>
+  <div><label for="lpass">Password</label><input id="lpass" type="password" autocomplete="current-password"></div>
+ </div>
+ <div class="row"><button type="button" class="primary" id="login">Sign in</button></div>
+ <div class="msg" id="loginMsg"></div>
+</div>
+
+<div class="card" id="adminCard">
+ <h2>Collected records &amp; export</h2>
+ <div class="grid">
+  <div><label for="fScope">Show / export</label>
+   <select id="fScope"><option value="all">All records</option><option value="school">A school</option><option value="dept">A school and department</option></select></div>
+  <div id="fSchoolWrap" hidden><label for="fSchool">School / Faculty</label><select id="fSchool"></select></div>
+  <div id="fDeptWrap" hidden><label for="fDept">Department</label><select id="fDept"></select></div>
+ </div>
+ <div class="grid" style="margin-top:12px">
+  <div class="span2"><label for="q">Search anything</label>
+   <input id="q" type="search" placeholder="e.g. nzeketha · lec:kalenywa · code:BIT456 · &quot;church history&quot; · -kiswahili" autocomplete="off"></div>
+  <div><label for="sortBy">Sort by</label>
+   <select id="sortBy"><option value="auto">Student name</option><option value="reg">Registration number</option><option value="code">Unit code</option><option value="lec">Lecturer</option><option value="sem">Semester</option><option value="school">School</option><option value="dept">Department</option><option value="time">Exam time</option><option value="ts">Date submitted</option></select></div>
+  <div><label for="sortDir">Order</label>
+   <select id="sortDir"><option value="asc">Ascending (A→Z, oldest first)</option><option value="desc">Descending (Z→A, newest first)</option></select></div>
+ </div>
+ <details class="tips"><summary>Search tips</summary><ul>
+  <li>Type any words. Every word must appear somewhere in the record.</li>
+  <li><code>"church history"</code> exact phrase. <code>-kiswahili</code> excludes.</li>
+  <li>One column: <code>lec:nzeketha</code> <code>code:BHU1210</code> <code>reg:2024/5</code> <code>name:sandra</code></li>
+  <li>Find gaps: <code>no:lec</code> <code>no:reg</code> <code>no:name</code> <code>no:dept</code></li>
+ </ul></details>
+ <div class="row">
+  <button type="button" class="primary" id="dl" disabled>Generate &amp; download (.xlsx)</button>
+  <button type="button" id="print" disabled>Print for lecturers</button>
+  <button type="button" id="refresh">Refresh</button>
+  <span class="note" id="count"></span>
+ </div>
+ <div class="msg" id="dlmsg"></div>
+ <div class="row pager" hidden></div>
+ <div class="tablewrap"><table>
+  <thead><tr><th>#</th><th class="sortable" data-k="reg">Reg. No.<span class="arr"></span></th><th class="sortable" data-k="auto">Name<span class="arr"></span></th><th class="sortable" data-k="school">School<span class="arr"></span></th><th class="sortable" data-k="dept">Department<span class="arr"></span></th><th class="sortable" data-k="code">Unit<span class="arr"></span></th><th class="sortable" data-k="lec">Lecturer<span class="arr"></span></th><th class="sortable" data-k="sem">Semester<span class="arr"></span></th><th class="sortable" data-k="time">Exam time<span class="arr"></span></th><th></th></tr></thead>
+  <tbody id="rows"></tbody>
+ </table></div>
+ <div class="row pager" hidden></div>
+</div>
+</div>
 <div id="printArea"></div>
+
 <script>
-// ===== Supabase (optional). Leave empty to use the built-in storage. See supabase-setup.sql =====
-const SUPABASE_URL="https://vdiljdqgbkuugmgdqhvq.supabase.co";        // e.g. https://abcdxyz.supabase.co
-const SUPABASE_ANON_KEY="sb_publishable_gwAGNlvc1h7WqxFO_agjMQ_29ci2FYE";   // the project's public anon key
-// ================================================================================================
+const SUPABASE_URL="https://vdiljdqgbkuugmgdqhvq.supabase.co";
+const SUPABASE_ANON_KEY="sb_publishable_gwAGNlvc1h7WqxFO_agjMQ_29ci2FYE";
 const DEADLINE=new Date("2026-11-10T13:00:00+03:00");
-const $=id=>document.getElementById(id);
-const NEW="__new__";
+const PAGE=100,NEW="__new__";
 const SEMS={"Sem 1 2026":"Jan - Apr 2026","Sem 2 2026":"May - Aug 2026"};
 const BUILTIN={
 "School of Computing and Informatics":["Computer Science","Information Technology","Software Engineering","Business Information Technology"],
@@ -198,370 +173,337 @@ const BUILTIN={
 "School of Engineering and Technology":["Electrical Engineering","Civil Engineering","Mechanical Engineering"],
 "School of Education":["Educational Foundations","Curriculum and Instruction","Educational Management"],
 "School of Social Sciences":["Sociology","Psychology","Criminology"],
-"School of Health Sciences":["Nursing","Public Health","Clinical Medicine"]
-};
+"School of Health Sciences":["Nursing","Public Health","Clinical Medicine"]};
+const $=id=>document.getElementById(id);
+const SB=SUPABASE_URL.replace(/\/+$/,"");
+let token=null,records=[],total=0,page=0,seq=0,sortKey="auto",sortDir="asc",catalog={};
+
 const normReg=s=>{const t=(s||"").toUpperCase().replace(/\s+/g,"");const m=t.match(/^([A-Z]+)[\/\-]?(\d{4})[\/\-]?(\d{3,6})$/);return m?m[1]+"/"+m[2]+"/"+m[3]:t};
 const clean=s=>(s||"").trim().replace(/\s+/g," ");
-const fmtUnit=(c,n)=>[clean(c).toUpperCase().replace(/\s/g,""),clean(n)].filter(Boolean).join(" ");
+const cleanCode=s=>(s||"").replace(/[^A-Za-z0-9]/g,"").toUpperCase();
+const fmtUnit=(c,n)=>[cleanCode(c),clean(n)].filter(Boolean).join(" ");
 const slug=s=>s.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,80)||"school";
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 function say(el,t,cls){el.textContent=t;el.className="msg "+(cls||"")}
-function fill(sel,items,placeholder,addNew){
-  sel.innerHTML="";
-  const o=(v,t,dis)=>{const e=document.createElement("option");e.value=v;e.textContent=t;if(dis)e.disabled=true;sel.appendChild(e);return e};
-  o("",placeholder);
-  items.forEach(i=>o(i,i));
-  if(addNew)o(NEW,"Not listed – add new");
+function fill(sel,items,ph,addNew){
+ sel.innerHTML="";const o=(v,t,d)=>{const e=document.createElement("option");e.value=v;e.textContent=t;if(d)e.disabled=true;sel.appendChild(e)};
+ o("",ph);items.forEach(i=>o(i,i));if(addNew)o(NEW,"Not listed – add new");
+}
+const hdr=(x={})=>({apikey:SUPABASE_ANON_KEY,...(token?{Authorization:"Bearer "+token}:{}),"Content-Type":"application/json",...x});
+async function sbFetch(path,opt={}){
+ const r=await fetch(SB+path,{...opt,headers:hdr(opt.headers)});
+ if(!r.ok){let m=r.statusText;try{const j=await r.json();m=j.message||j.msg||j.error_description||m}catch(e){}throw new Error(m)}
+ return r.status===204?null:r.json().catch(()=>null);
 }
 
-let db=null,isAdmin=true,localMode=true,uid=null;
-const mode=SUPABASE_URL&&SUPABASE_ANON_KEY?"sb":"local";   // becomes "claude" if the built-in db is found
-let modeNow=mode,token=null;
-const SB=SUPABASE_URL.replace(/\/+$/,"");
-async function sbFetch(path,opt={}){
-  const r=await fetch(SB+path,{...opt,headers:{apikey:SUPABASE_ANON_KEY,...(token?{Authorization:"Bearer "+token}:{}),"Content-Type":"application/json",...(opt.headers||{})}});
-  if(!r.ok){let m=r.statusText;try{const j=await r.json();m=j.message||j.msg||j.error_description||m}catch(e){}throw new Error(m)}
-  return r.status===204?null:r.json().catch(()=>null);
+// ---------- catalog
+function rebuildCatalog(rows){
+ const c={};for(const k in BUILTIN)c[k]=[...BUILTIN[k]];
+ (rows||[]).forEach(x=>{const n=clean(x.name);if(n&&Array.isArray(x.departments))c[n]=[...new Set([...(c[n]||[]),...x.departments.filter(s=>typeof s==="string").map(clean).filter(Boolean)])]});
+ Object.keys(c).forEach(k=>c[k].sort());
+ catalog=Object.fromEntries(Object.keys(c).sort().map(k=>[k,c[k]]));
+ const s=$("school").value,d=$("dept").value,fs=$("fSchool").value;
+ fill($("school"),Object.keys(catalog),"Select school / faculty",true);
+ if(catalog[s]||s===NEW)$("school").value=s;
+ syncDept(d);
+ fill($("fSchool"),Object.keys(catalog),"Select school / faculty");
+ if(catalog[fs])$("fSchool").value=fs;
+ syncFDept();
 }
-async function sbInsertRecs(rows){
-  const url="/rest/v1/records?on_conflict=reg,code,sem",body=JSON.stringify(rows);
-  try{const r=await sbFetch(url,{method:"POST",headers:{Prefer:"resolution=ignore-duplicates,return=representation"},body});return Array.isArray(r)?r.length:rows.length}
-  catch(e){
-    if(/row-level|polic|permission/i.test(e.message)){await sbFetch(url,{method:"POST",headers:{Prefer:"resolution=ignore-duplicates,return=minimal"},body});return null}
-    throw e;
-  }
-}
-async function sbLoadCatalog(){try{const rows=await sbFetch("/rest/v1/schools?select=name,departments");dbDocs=rows.map(x=>({data:()=>x}));rebuildCatalog(dbDocs)}catch(e){}}
-async function sbAddDept(school,dept){
-  const old=await sbFetch("/rest/v1/schools?select=departments&name=eq."+encodeURIComponent(school));
-  const ds=[...new Set([...((old&&old[0]&&old[0].departments)||[]),dept])];
-  await sbFetch("/rest/v1/schools?on_conflict=name",{method:"POST",headers:{Prefer:"resolution=merge-duplicates,return=minimal"},body:JSON.stringify({name:school,departments:ds})});
-  await sbLoadCatalog();
-}
-async function sbLoadRecords(){
-  const rows=await sbFetch("/rest/v1/records?select=*&order=created_at.asc&limit=5000");
-  records=rows.map(r=>({id:r.id,reg:r.reg,name:r.name,school:r.school,dept:r.dept,code:r.code,uname:r.uname,unit:r.unit,lec:r.lec,sem:r.sem,time:r.time,ts:Date.parse(r.created_at)}));
-  renderRecords();
-}
-let catalog={};                       // school -> [departments]
-let records=[];                       // {id?, ...}
-let localCat={};                      // additions made while offline
-function rebuildCatalog(dbDocs){
-  const c={};
-  for(const k in BUILTIN)c[k]=[...BUILTIN[k]];
-  const merge=(n,ds)=>{if(!n)return;c[n]=[...new Set([...(c[n]||[]),...ds])]};
-  for(const k in localCat)merge(k,localCat[k]);
-  dbDocs.forEach(d=>{const x=d.data()||{};if(typeof x.name==="string"&&Array.isArray(x.departments))merge(clean(x.name),x.departments.filter(s=>typeof s==="string").map(clean).filter(Boolean))});
-  Object.keys(c).forEach(k=>c[k].sort());
-  catalog=Object.fromEntries(Object.keys(c).sort().map(k=>[k,c[k]]));
-  renderCatalog();
-}
-let dbDocs=[];
-function renderCatalog(){
-  const s=$("school").value,d=$("dept").value;
-  fill($("school"),Object.keys(catalog),"Select school / faculty",true);
-  if(catalog[s]||s===NEW)$("school").value=s;
-  syncDept(d);
-  const fs=$("fSchool").value;
-  fill($("fSchool"),Object.keys(catalog),"Select school / faculty");
-  if(catalog[fs])$("fSchool").value=fs;
-  syncFDept();
+async function loadCatalog(){try{rebuildCatalog(await sbFetch("/rest/v1/schools?select=name,departments"))}catch(e){}}
+async function addDept(school,dept){
+ const old=await sbFetch("/rest/v1/schools?select=departments&name=eq."+encodeURIComponent(school));
+ const ds=[...new Set([...((old&&old[0]&&old[0].departments)||[]),dept])];
+ await sbFetch("/rest/v1/schools?on_conflict=name",{method:"POST",headers:{Prefer:"resolution=merge-duplicates,return=minimal"},body:JSON.stringify({name:school,departments:ds})});
+ await loadCatalog();
 }
 function syncDept(keep){
-  const s=$("school").value;
-  const isNewSchool=s===NEW;
-  $("newSchoolWrap").hidden=!isNewSchool;
-  fill($("dept"),catalog[s]||[],s?"Select department":"Select a school first",!isNewSchool&&!!s);
-  if(isNewSchool){$("dept").innerHTML='<option value="'+NEW+'">Enter department below</option>';}
-  if(keep&&[...$("dept").options].some(o=>o.value===keep))$("dept").value=keep;
-  $("newDeptWrap").hidden=!(isNewSchool||$("dept").value===NEW);
+ const s=$("school").value,isNew=s===NEW;
+ $("newSchoolWrap").hidden=!isNew;
+ fill($("dept"),catalog[s]||[],s?"Select department":"Select a school first",!isNew&&!!s);
+ if(isNew)$("dept").innerHTML='<option value="'+NEW+'">Enter department below</option>';
+ if(keep&&[...$("dept").options].some(o=>o.value===keep))$("dept").value=keep;
+ $("newDeptWrap").hidden=!(isNew||$("dept").value===NEW);
 }
+function syncFDept(){fill($("fDept"),catalog[$("fSchool").value]||[],$("fSchool").value?"Select department":"Select a school first")}
 $("school").onchange=()=>syncDept();
 $("dept").onchange=()=>{$("newDeptWrap").hidden=!($("school").value===NEW||$("dept").value===NEW)};
 
-// ----- units
+// ---------- unit rows (unit code: letters and numbers only)
 function addUnitRow(){
-  const d=document.createElement("div");d.className="unit";
-  d.innerHTML=`<div class="unit-head"><div class="preview"></div><button type="button" class="link">Remove</button></div>
-  <div class="grid">
-    <div><label>Unit code</label><input class="code" placeholder="BIT456" autocapitalize="characters"></div>
-    <div><label>Unit name</label><input class="uname" placeholder="Data Engineering"></div>
-    <div><label>Lecturer</label><input class="lec" placeholder="Name of lecturer"></div>
-    <div><label>Semester</label><select class="sem"><option value="">Select</option>
-      <option>Sem 1 2026</option><option>Sem 2 2026</option><option disabled>Semester 3 (not available)</option></select></div>
-    <div class="span2"><label>Semester exam time</label><input class="etime" placeholder="Fills in when you pick a semester"></div>
-  </div>`;
-  const q=s=>d.querySelector(s);
-  const upd=()=>q(".preview").textContent=fmtUnit(q(".code").value,q(".uname").value);
-  q(".code").oninput=upd;q(".uname").oninput=upd;
-  q(".sem").onchange=()=>{q(".etime").value=SEMS[q(".sem").value]||""};
-  q(".link").onclick=()=>{if($("units").children.length>1)d.remove()};
-  $("units").appendChild(d);
+ const d=document.createElement("div");d.className="unit";
+ d.innerHTML=`<div class="unit-head"><div class="preview"></div><button type="button" class="link">Remove</button></div>
+ <div class="grid">
+  <div><label>Unit code</label><input class="code" placeholder="BIT456" autocapitalize="characters" autocomplete="off" maxlength="20"><div class="hint">Letters and numbers only, no spaces or symbols.</div></div>
+  <div><label>Unit name</label><input class="uname" placeholder="Data Engineering"></div>
+  <div><label>Lecturer</label><input class="lec" placeholder="Name of lecturer"></div>
+  <div><label>Semester</label><select class="sem"><option value="">Select</option><option>Sem 1 2026</option><option>Sem 2 2026</option><option disabled>Semester 3 (not available)</option></select></div>
+  <div class="span2"><label>Semester exam time</label><input class="etime" placeholder="Fills in when you pick a semester"></div>
+ </div>`;
+ const q=s=>d.querySelector(s);
+ const upd=()=>q(".preview").textContent=fmtUnit(q(".code").value,q(".uname").value);
+ q(".code").oninput=()=>{const v=cleanCode(q(".code").value);if(v!==q(".code").value)q(".code").value=v;upd()};
+ q(".uname").oninput=upd;
+ q(".sem").onchange=()=>{q(".etime").value=SEMS[q(".sem").value]||""};
+ q(".link").onclick=()=>{if($("units").children.length>1)d.remove()};
+ $("units").appendChild(d);
 }
 $("addUnit").onclick=addUnitRow;
 function resetUnits(){$("units").innerHTML="";addUnitRow()}
 function resetAll(){["reg","name","newSchool","newDept"].forEach(i=>$(i).value="");$("school").value="";syncDept();resetUnits()}
 $("clear").onclick=()=>{resetAll();say($("msg"),"")};
 
-// ----- submit
+// ---------- submit
+async function insertRecs(rows){
+ const url="/rest/v1/records?on_conflict=reg,code,sem",body=JSON.stringify(rows);
+ try{const r=await sbFetch(url,{method:"POST",headers:{Prefer:"resolution=ignore-duplicates,return=representation"},body});return Array.isArray(r)?r.length:rows.length}
+ catch(e){if(/row-level|polic|permission/i.test(e.message)){await sbFetch(url,{method:"POST",headers:{Prefer:"resolution=ignore-duplicates,return=minimal"},body});return null}throw e}
+}
 $("addRec").onclick=async()=>{
-  if(Date.now()>DEADLINE)return say($("msg"),"Sorry, the deadline has passed and the form is closed.","err");
-  const reg=normReg($("reg").value),name=clean($("name").value);
-  let school=$("school").value,dept=$("dept").value,addCat=false;
-  if(school===NEW){school=clean($("newSchool").value);dept=clean($("newDept").value);
-    if(!school||!dept)return say($("msg"),"A new school needs its name and at least one department.","err");addCat=true}
-  else if(dept===NEW){dept=clean($("newDept").value);if(!dept)return say($("msg"),"Enter the new department name.","err");addCat=true}
-  if(!reg||!name||!school||!dept)return say($("msg"),"Please fill in registration number, name, school/faculty and department.","err");
-  const units=[...$("units").children].map(u=>({
-    code:clean(u.querySelector(".code").value).toUpperCase().replace(/\s/g,""),
-    name:clean(u.querySelector(".uname").value),
-    lec:clean(u.querySelector(".lec").value),
-    sem:u.querySelector(".sem").value,
-    time:clean(u.querySelector(".etime").value)}));
-  for(const [i,u] of units.entries())
-    if(!u.code||!u.name||!u.lec||!u.sem||!u.time)return say($("msg"),`Unit ${i+1}: complete the code, name, lecturer, semester and exam time.`,"err");
-  const seen=new Set();
-  for(const u of units){if(seen.has(u.code))return say($("msg"),`Unit ${u.code} is listed twice. Remove the repeat.`,"err");seen.add(u.code)}
-  let added=units.length;
-  $("addRec").disabled=true;
-  try{
-    if(addCat){
-      if(modeNow==="sb")await sbAddDept(school,dept);
-      else if(db){
-        const ref=db.collection("schools").doc(slug(school));
-        const snap=await ref.get();const old=snap.exists?(snap.data().departments||[]):[];
-        await ref.set({name:school,departments:[...new Set([...old,dept])]});
-      }else{localCat[school]=[...new Set([...(localCat[school]||[]),dept])];rebuildCatalog(dbDocs)}
-    }
-    const base={reg,name,school,dept};
-    const recs=units.map(u=>({...base,code:u.code,uname:u.name,unit:fmtUnit(u.code,u.name),lec:u.lec,sem:u.sem,time:u.time,ts:Date.now()}));
-    if(modeNow==="sb"){const n=await sbInsertRecs(recs.map(({ts,...r})=>r));if(n!==null)added=n}
-    else if(db){
-      if(!uid)throw new Error("please sign in to claude.ai to submit.");
-      const ref=db.collection("records").doc(uid);
-      let old=[];try{const sn=await ref.get();if(sn.exists)old=sn.data().items||[]}catch(e){}
-      await ref.set({items:[...old,...recs]});
-    }else records.push(...recs);
-    const skipped=units.length-added;
-    say($("msg"),(added?`Submitted ${added} unit(s) for ${name}.`:`Nothing new to save for ${name}.`)+(skipped?` ${skipped} unit(s) were already on the list for this registration number and were not added again.`:"")+(addCat?" Your school/department has been added to the list.":""),"ok");
-    resetAll();renderRecords();
-  }catch(e){say($("msg"),"Could not submit: "+((e&&e.message)||"please try again, or ask the owner to allow editing."),"err")}
-  $("addRec").disabled=false;
+ if(Date.now()>DEADLINE)return say($("msg"),"Sorry, the deadline has passed and the form is closed.","err");
+ const reg=normReg($("reg").value),name=clean($("name").value);
+ let school=$("school").value,dept=$("dept").value,addCat=false;
+ if(school===NEW){school=clean($("newSchool").value);dept=clean($("newDept").value);
+  if(!school||!dept)return say($("msg"),"A new school needs its name and at least one department.","err");addCat=true}
+ else if(dept===NEW){dept=clean($("newDept").value);if(!dept)return say($("msg"),"Enter the new department name.","err");addCat=true}
+ if(!reg||!name||!school||!dept)return say($("msg"),"Please fill in registration number, name, school/faculty and department.","err");
+ const units=[...$("units").children].map(u=>({
+  rawCode:u.querySelector(".code").value,code:cleanCode(u.querySelector(".code").value),
+  name:clean(u.querySelector(".uname").value),lec:clean(u.querySelector(".lec").value),
+  sem:u.querySelector(".sem").value,time:clean(u.querySelector(".etime").value)}));
+ for(const [i,u] of units.entries()){
+  if(!u.code||!u.name||!u.lec||!u.sem||!u.time)return say($("msg"),`Unit ${i+1}: complete the code, name, lecturer, semester and exam time.`,"err");
+  if(!/^[A-Z0-9]+$/.test(u.rawCode.trim().toUpperCase()))return say($("msg"),`Unit ${i+1}: the unit code may only contain letters and numbers (no spaces or special characters).`,"err");
+ }
+ const seen=new Set();
+ for(const u of units){if(seen.has(u.code))return say($("msg"),`Unit ${u.code} is listed twice. Remove the repeat.`,"err");seen.add(u.code)}
+ let added=units.length;$("addRec").disabled=true;
+ try{
+  if(addCat)await addDept(school,dept);
+  const recs=units.map(u=>({reg,name,school,dept,code:u.code,uname:u.name,unit:fmtUnit(u.code,u.name),lec:u.lec,sem:u.sem,time:u.time}));
+  const n=await insertRecs(recs);if(n!==null)added=n;
+  const skipped=units.length-added;
+  say($("msg"),(added?`Submitted ${added} unit(s) for ${name}.`:`Nothing new to save for ${name}.`)+(skipped?` ${skipped} unit(s) were already on the list for this registration number and were not added again.`:"")+(addCat?" Your school/department has been added to the list.":""),"ok");
+  resetAll();loadPage();
+ }catch(e){say($("msg"),"Could not submit: "+((e&&e.message)||"please try again."),"err")}
+ $("addRec").disabled=false;
 };
 
-// ----- admin: filter, table, export
-$("fScope").onchange=()=>{const v=$("fScope").value;$("fSchoolWrap").hidden=v==="all";$("fDeptWrap").hidden=v!=="dept";syncFDept();renderRecords()};
-$("fSchool").onchange=()=>{syncFDept();renderRecords()};
-$("fDept").onchange=renderRecords;
-function syncFDept(){fill($("fDept"),catalog[$("fSchool").value]||[],$("fSchool").value?"Select department":"Select a school first")}
-// ----- smart search + sort
-const COL=new Intl.Collator(undefined,{numeric:true,sensitivity:"base"});
-const FIELDS=[["reg",3],["name",3],["code",3],["unit",2],["lec",2],["school",1],["dept",1],["sem",1],["time",1]];
+// ---------- search parsing (server-side)
+const COLS=["reg","name","code","unit","lec","school","dept","sem","time"];
 const ALIAS={reg:"reg",regno:"reg",id:"reg",name:"name",student:"name",code:"code",unit:"unit",lec:"lec",lecturer:"lec",school:"school",faculty:"school",dept:"dept",department:"dept",sem:"sem",semester:"sem",time:"time",exam:"time"};
-const nrm=s=>(s==null?"":String(s)).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
-const cmpk=s=>nrm(s).replace(/[^a-z0-9]/g,"");
-const cache=new WeakMap();
-function idx(r){
-  let x=cache.get(r);if(x)return x;x={};
-  for(const [f] of FIELDS){const t=nrm(r[f]);x[f]={t,c:t.replace(/[^a-z0-9]/g,""),w:t.split(/[^a-z0-9]+/).filter(Boolean)}}
-  cache.set(r,x);return x;
-}
-function lev(a,b,max){
-  if(Math.abs(a.length-b.length)>max)return max+1;
-  let prev=Array.from({length:b.length+1},(_,i)=>i);
-  for(let i=1;i<=a.length;i++){
-    const cur=[i];let mn=i;
-    for(let j=1;j<=b.length;j++){const v=Math.min(prev[j]+1,cur[j-1]+1,prev[j-1]+(a[i-1]===b[j-1]?0:1));cur[j]=v;if(v<mn)mn=v}
-    if(mn>max)return max+1;prev=cur;
-  }
-  return prev[b.length];
-}
+const safe=s=>String(s).replace(/[,()"*\\%:]/g," ").trim();
 function parseQ(q){
-  const terms=[],re=/(-?)(?:([a-zA-Z]+):)?(?:"([^"]+)"|(\S+))/g;let m;
-  while((m=re.exec(q))){
-    const neg=!!m[1],key=m[2]?m[2].toLowerCase():null,val=m[3]||m[4];
-    if(!val)continue;
-    if(key==="no"||key==="missing"){const f=ALIAS[nrm(val)];if(f)terms.push({neg,missing:f});continue}
-    if(key&&!ALIAS[key]){const raw=(m[3]||m[4]);const full=key+":"+raw;terms.push({neg,field:null,raw:full,t:nrm(full),c:cmpk(full)});continue}
-    terms.push({neg,field:key?ALIAS[key]:null,raw:val,t:nrm(val),c:cmpk(val)});
-  }
-  return terms;
+ const out=[],re=/(-?)(?:([a-zA-Z]+):)?(?:"([^"]+)"|(\S+))/g;let m;
+ while((m=re.exec(q))){
+  const neg=!!m[1],key=m[2]?m[2].toLowerCase():null,val=m[3]||m[4];if(!val)continue;
+  if(key==="no"||key==="missing"){const f=ALIAS[val.toLowerCase()];if(f)out.push({neg,missing:f});continue}
+  if(key&&!ALIAS[key]){out.push({neg,field:null,raw:key+":"+val});continue}
+  out.push({neg,field:key?ALIAS[key]:null,raw:val});
+ }
+ return out;
 }
-function termScore(x,term){
-  let best=0;
-  for(const [f,w] of FIELDS){
-    if(term.field&&term.field!==f)continue;
-    const d=x[f];if(!d.t)continue;
-    let sc=0;
-    if(d.t===term.t||(term.c&&d.c===term.c))sc=4;
-    else if(d.w.includes(term.t))sc=3.5;
-    else if(d.w.some(w0=>w0.startsWith(term.t)))sc=3;
-    else if(d.t.includes(term.t))sc=2.5;
-    else if(term.c.length>=3&&d.c.includes(term.c))sc=2;
-    else if(term.t.length>=4&&!/\s/.test(term.t)){
-      const max=term.t.length>=8?2:1;
-      for(const w0 of d.w){if(w0.length>=3&&lev(term.t,w0,max)<=max){sc=1;break}}
-    }
-    if(sc)best=Math.max(best,sc*w);
-  }
-  return best;
+function buildQuery(){
+ const p=[],v=$("fScope").value,and=[];
+ if(v!=="all"){p.push("school=eq."+encodeURIComponent($("fSchool").value));if(v==="dept")p.push("dept=eq."+encodeURIComponent($("fDept").value))}
+ for(const t of parseQ($("q").value||"")){
+  if(t.missing){const c=t.missing;and.push(t.neg?`and(${c}.not.is.null,${c}.neq.)`:`or(${c}.is.null,${c}.eq.)`);continue}
+  const val=safe(t.raw);if(!val)continue;
+  const ors=(t.field?[t.field]:COLS).map(c=>`${c}.ilike.*${val}*`).join(",");
+  and.push(t.neg?`not.or(${ors})`:`or(${ors})`);
+ }
+ if(and.length)p.push("and="+encodeURIComponent("("+and.join(",")+")"));
+ const key=sortKey==="auto"?"name":sortKey,col=key==="ts"?"created_at":key;
+ p.push(`order=${col}.${sortDir}.nullslast,id.asc`);
+ return p.join("&");
+}
+const ready=()=>{const v=$("fScope").value;return v==="all"||(v==="school"&&$("fSchool").value)||(v==="dept"&&$("fSchool").value&&$("fDept").value)};
+async function fetchRange(from,to){
+ const r=await fetch(SB+"/rest/v1/records?select=*&"+buildQuery(),{headers:hdr({"Range-Unit":"items",Range:`${from}-${to}`,Prefer:"count=exact"})});
+ if(r.status===416)return{rows:[],total:null};
+ if(!r.ok){let m=r.statusText;try{m=(await r.json()).message||m}catch(e){}throw new Error(m)}
+ const t=parseInt((r.headers.get("Content-Range")||"").split("/")[1],10);
+ return{rows:(await r.json()).map(x=>({...x,ts:Date.parse(x.created_at)})),total:isNaN(t)?0:t};
+}
+async function fetchAll(){
+ if(!ready())return[];
+ const out=[];
+ for(let off=0;;off+=1000){const r=await fetchRange(off,off+999);out.push(...r.rows);if(r.rows.length<1000)break}
+ return out;
+}
+
+// ---------- paging (100 per page) + table
+async function loadPage(){
+ const my=++seq;
+ if(!ready()){records=[];total=0;return draw()}
+ try{
+  const r=await fetchRange(page*PAGE,page*PAGE+PAGE-1);
+  if(my!==seq)return;
+  if(r.total===null){if(page>0){page=0;return loadPage()}r.total=0}
+  records=r.rows;total=r.total;say($("dlmsg"),"");draw();
+ }catch(e){if(my===seq)say($("dlmsg"),"Could not load records: "+e.message,"err")}
+}
+let sig="";
+function refreshFromControls(){
+ const s=[$("q").value,$("fScope").value,$("fSchool").value,$("fDept").value,sortKey,sortDir].join("|");
+ if(s!==sig){sig=s;page=0}
+ loadPage();
 }
 let hlRe=null;
-function setHl(terms){
-  const parts=terms.filter(t=>!t.neg&&!t.missing&&t.raw).map(t=>t.raw.replace(/[.*+?^${}()|[\]\\]/g,"\\$&"));
-  hlRe=parts.length?new RegExp("("+parts.join("|")+")","gi"):null;
+function setHl(){
+ const parts=parseQ($("q").value||"").filter(t=>!t.neg&&!t.missing&&t.raw).map(t=>t.raw.replace(/[.*+?^${}()|[\]\\]/g,"\\$&"));
+ hlRe=parts.length?new RegExp("("+parts.join("|")+")","gi"):null;
 }
 function hl(v){
-  const t=v==null?"":String(v);
-  if(!t)return '<span style="color:var(--muted)">—</span>';
-  return hlRe?t.split(hlRe).map((p,i)=>i%2?"<mark>"+esc(p)+"</mark>":esc(p)).join(""):esc(t);
+ const t=v==null?"":String(v);if(!t)return '<span style="color:var(--muted)">—</span>';
+ return hlRe?t.split(hlRe).map((p,i)=>i%2?"<mark>"+esc(p)+"</mark>":esc(p)).join(""):esc(t);
 }
-let sortKey="auto",sortDir="asc",lastScores=new Map();
-function sortList(list,scores,searching){
-  let key=sortKey;if(key==="auto")key=searching?"relevance":"name";
-  const dir=sortDir==="desc"?-1:1;
-  const tie=(a,b)=>COL.compare(a.name||"~",b.name||"~")||COL.compare(a.code||"",b.code||"");
-  return [...list].sort((a,b)=>{
-    if(key==="relevance")return (scores.get(b)||0)-(scores.get(a)||0)||tie(a,b);
-    const va=key==="ts"?(a.ts||0):a[key],vb=key==="ts"?(b.ts||0):b[key];
-    const ea=va==null||va==="",eb=vb==null||vb==="";
-    if(ea||eb)return ea&&eb?tie(a,b):ea?1:-1;
-    const d=key==="ts"?va-vb:COL.compare(String(va),String(vb));
-    return d?d*dir:tie(a,b);
-  });
+function draw(){
+ setHl();
+ const q=($("q").value||"").trim(),pages=Math.max(1,Math.ceil(total/PAGE)),start=page*PAGE;
+ $("count").textContent=ready()?`${total} record(s)`+(q?" match your search":" selected"):"Choose a filter to continue";
+ $("dl").disabled=!total;$("print").disabled=!total;
+ document.querySelectorAll(".pager").forEach(p=>{
+  p.hidden=total<=PAGE;
+  p.innerHTML=`<button type="button" data-go="first" ${page===0?"disabled":""}>« First</button><button type="button" data-go="prev" ${page===0?"disabled":""}>← Previous</button><span class="note">Page ${page+1} of ${pages} · rows ${total?start+1:0}–${start+records.length} of ${total}</span><button type="button" data-go="next" ${page>=pages-1?"disabled":""}>Next →</button><button type="button" data-go="last" ${page>=pages-1?"disabled":""}>Last »</button>`;
+ });
+ const canDel=!!token;
+ $("rows").innerHTML=records.length?records.map((r,i)=>`<tr><td>${start+i+1}</td><td>${hl(r.reg)}</td><td>${hl(r.name)}</td><td>${hl(r.school)}</td><td>${hl(r.dept)}</td><td>${hl(r.unit)}</td><td>${hl(r.lec)}</td><td>${hl(r.sem)}</td><td>${hl(r.time)}</td><td>${canDel?`<button type="button" class="link" data-i="${i}">Delete</button>`:""}</td></tr>`).join(""):`<tr><td colspan="10" style="color:var(--muted)">${q?"No records match your search.":"No records for this selection."}</td></tr>`;
+ document.querySelectorAll("th.sortable").forEach(th=>{th.querySelector(".arr").textContent=sortKey===th.dataset.k?(sortDir==="desc"?"▼":"▲"):""});
+ $("rows").querySelectorAll("button[data-i]").forEach(b=>b.onclick=async()=>{
+  const r=records[+b.dataset.i];
+  try{await sbFetch("/rest/v1/records?id=eq."+encodeURIComponent(r.id),{method:"DELETE"});loadPage()}catch(e){say($("dlmsg"),"Could not delete: "+e.message,"err")}
+ });
+ window.scrollTo&&0;
 }
-function filtered(){
-  const v=$("fScope").value,s=$("fSchool").value,d=$("fDept").value;
-  let list=records.filter(r=>v==="all"||(r.school===s&&(v==="school"||r.dept===d)));
-  const terms=parseQ($("q").value||"");setHl(terms);
-  const searching=terms.length>0,scores=new Map();
-  if(searching){
-    const pos=terms.filter(t=>!t.neg&&!t.missing),neg=terms.filter(t=>t.neg&&!t.missing),miss=terms.filter(t=>t.missing);
-    list=list.filter(r=>{
-      const x=idx(r);let total=0;
-      for(const t of miss){const has=!!r[t.missing];if(t.neg?!has:has)return false}
-      for(const t of pos){const sc=termScore(x,t);if(!sc)return false;total+=sc}
-      for(const t of neg){if(termScore(x,t)>=2)return false}
-      scores.set(r,total);return true;
-    });
-  }
-  lastScores=scores;
-  return sortList(list,scores,searching);
-}
-function esc(s){const d=document.createElement("div");d.textContent=s==null?"":String(s);return d.innerHTML}
-function markHeaders(){
-  document.querySelectorAll("th.sortable").forEach(th=>{
-    const on=sortKey===th.dataset.k;
-    th.querySelector(".arr").textContent=on?(sortDir==="desc"?"▼":"▲"):"";
-  });
-}
-function renderRecords(){
-  const v=$("fScope").value,s=$("fSchool").value,d=$("fDept").value,q=($("q").value||"").trim();
-  const ready=v==="all"||(v==="school"&&s)||(v==="dept"&&s&&d);
-  const list=ready?filtered():[];
-  const CAP=1000,shown=list.slice(0,CAP);
-  $("count").textContent=ready?`${list.length} of ${records.length} record(s)`+(q?" match your search":" selected")+(list.length>CAP?` (showing first ${CAP}; downloads include all)`:""):"Choose a filter to continue";
-  $("dl").disabled=!list.length;$("print").disabled=!list.length;
-  const canDel=!(modeNow==="claude"||(modeNow==="sb"&&!token));
-  $("rows").innerHTML=shown.length?shown.map((r,i)=>`<tr><td>${i+1}</td><td>${hl(r.reg)}</td><td>${hl(r.name)}</td><td>${hl(r.school)}</td><td>${hl(r.dept)}</td><td>${hl(r.unit)}</td><td>${hl(r.lec)}</td><td>${hl(r.sem)}</td><td>${hl(r.time)}</td><td>${canDel?`<button type="button" class="link" data-i="${records.indexOf(r)}">Delete</button>`:""}</td></tr>`).join(""):`<tr><td colspan="10" style="color:var(--muted)">${q?"No records match your search. Try fewer words or check the spelling.":"No records for this selection."}</td></tr>`;
-  markHeaders();
-  $("rows").querySelectorAll("button[data-i]").forEach(b=>b.onclick=async()=>{
-    const r=records[+b.dataset.i];
-    if(modeNow==="sb"&&r.id){try{await sbFetch("/rest/v1/records?id=eq."+encodeURIComponent(r.id),{method:"DELETE"});await sbLoadRecords()}catch(e){say($("dlmsg"),"Could not delete: "+e.message,"err")}}
-    else{records.splice(+b.dataset.i,1);renderRecords()}});
-}
-let qTimer=null;
-$("q").oninput=()=>{clearTimeout(qTimer);qTimer=setTimeout(renderRecords,120)};
-$("sortBy").onchange=()=>{sortKey=$("sortBy").value;renderRecords()};
-$("sortDir").onchange=()=>{sortDir=$("sortDir").value;renderRecords()};
-document.querySelectorAll("th.sortable").forEach(th=>th.onclick=()=>{
-  const k=th.dataset.k;
-  if(sortKey===k)sortDir=sortDir==="asc"?"desc":"asc";else{sortKey=k;sortDir="asc"}
-  $("sortBy").value=sortKey;$("sortDir").value=sortDir;renderRecords();
+document.addEventListener("click",e=>{
+ const g=e.target.dataset&&e.target.dataset.go;if(!g)return;
+ const last=Math.max(0,Math.ceil(total/PAGE)-1);
+ page=g==="first"?0:g==="prev"?Math.max(0,page-1):g==="next"?Math.min(last,page+1):last;
+ loadPage();$("adminCard").scrollIntoView({behavior:"smooth",block:"start"});
 });
+$("fScope").onchange=()=>{const v=$("fScope").value;$("fSchoolWrap").hidden=v==="all";$("fDeptWrap").hidden=v!=="dept";syncFDept();refreshFromControls()};
+$("fSchool").onchange=()=>{syncFDept();refreshFromControls()};
+$("fDept").onchange=refreshFromControls;
+let qT=null;$("q").oninput=()=>{clearTimeout(qT);qT=setTimeout(refreshFromControls,300)};
+$("sortBy").onchange=()=>{sortKey=$("sortBy").value;refreshFromControls()};
+$("sortDir").onchange=()=>{sortDir=$("sortDir").value;refreshFromControls()};
+document.querySelectorAll("th.sortable").forEach(th=>th.onclick=()=>{
+ const k=th.dataset.k;if(sortKey===k)sortDir=sortDir==="asc"?"desc":"asc";else{sortKey=k;sortDir="asc"}
+ $("sortBy").value=sortKey;$("sortDir").value=sortDir;refreshFromControls();
+});
+$("refresh").onclick=loadPage;
+
+// ---------- export (all matching records, lecturer names as submitted)
 $("dl").onclick=async()=>{
-  const list=filtered();if(!list.length)return;
-  if(typeof XLSX==="undefined")return say($("dlmsg"),"Spreadsheet library failed to load. Reload and try again.","err");
+ if(typeof XLSX==="undefined")return say($("dlmsg"),"Spreadsheet library failed to load. Reload and try again.","err");
+ say($("dlmsg"),"Preparing spreadsheet…");$("dl").disabled=true;
+ try{
+  const list=await fetchAll();if(!list.length)return say($("dlmsg"),"Nothing to export.");
   const head=["No.","Registration Number","Name","School / Faculty","Department","Unit (Code + Name)","Unit Code","Unit Name","Lecturer","Semester","Semester Exam Time","Submitted"];
   const aoa=[head,...list.map((r,i)=>[i+1,r.reg,r.name,r.school,r.dept,r.unit,r.code,r.uname,r.lec,r.sem,r.time,r.ts?new Date(r.ts).toLocaleString():""])];
   const ws=XLSX.utils.aoa_to_sheet(aoa);
-  ws["!cols"]=head.map((h,c)=>({wch:Math.min(40,Math.max(h.length,...aoa.slice(1).map(r=>String(r[c]).length))+2)}));
+  ws["!cols"]=head.map((h,c)=>({wch:Math.min(40,Math.max(h.length,...aoa.slice(1).map(r=>String(r[c]==null?"":r[c]).length))+2)}));
   const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,"Missing Marks");
-  const blob=new Blob([XLSX.write(wb,{type:"array",bookType:"xlsx"})],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
   const v=$("fScope").value,part=v==="all"?"all":v==="school"?slug($("fSchool").value):slug($("fSchool").value)+"_"+slug($("fDept").value);
-  const fname=`missing-special-marks_${part}.xlsx`;
-  try{
-    const dls=await claude.use("downloads");
-    if(dls){await dls.save({filename:fname,data:blob});return say($("dlmsg"),"Spreadsheet ready.","ok")}
-  }catch(e){if(e&&e.code==="declined")return say($("dlmsg"),"Download cancelled.")}
-  try{const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=fname;document.body.appendChild(a);a.click();a.remove();say($("dlmsg"),"Spreadsheet downloaded.","ok")}
-  catch(e){say($("dlmsg"),"Could not save the file here.","err")}
+  XLSX.writeFile(wb,`missing-special-marks_${part}.xlsx`);
+  say($("dlmsg"),`Spreadsheet downloaded (${list.length} records).`,"ok");
+ }catch(e){say($("dlmsg"),"Export failed: "+e.message,"err")}
+ $("dl").disabled=!total;
 };
 
-// ----- print for lecturers (grouped by lecturer)
-$("print").onclick=()=>{
-  const list=filtered();if(!list.length)return;
+// ---------- print: group the same lecturer together, whatever the spelling
+const TITLES=new Set("dr doctor prof proff professor mr mrs ms miss madam madaam mdm md sir lec lecturer rev reverend".split(" "));
+function lecKey(s){
+ return String(s||"").toLowerCase().replace(/[’']/g,"").replace(/[^a-z0-9]+/g," ").split(" ").filter(w=>w&&!TITLES.has(w)).sort().join(" ");
+}
+function lev(a,b,max){
+ if(Math.abs(a.length-b.length)>max)return max+1;
+ let prev=Array.from({length:b.length+1},(_,i)=>i);
+ for(let i=1;i<=a.length;i++){const cur=[i];let mn=i;
+  for(let j=1;j<=b.length;j++){const v=Math.min(prev[j]+1,cur[j-1]+1,prev[j-1]+(a[i-1]===b[j-1]?0:1));cur[j]=v;if(v<mn)mn=v}
+  if(mn>max)return max+1;prev=cur}
+ return prev[b.length];
+}
+function tidy(s){
+ let t=clean(String(s||"").replace(/^[\s"]+|[\s"]+$/g,""));
+ t=t.replace(/^(dr|doctor)\b\.?\s*/i,"Dr. ").replace(/^(prof|proff|professor)\b\.?\s*/i,"Prof. ").replace(/^mr\b\.?\s*/i,"Mr. ").replace(/^(madam|madaam|mdm)\b\.?\s*/i,"Madam ");
+ return t.toLowerCase().replace(/(^|[\s.'\-])([a-z])/g,(m,a,b)=>a+b.toUpperCase()).trim();
+}
+function groupLecturers(list){
+ const keyCount=new Map(),rawCount=new Map();
+ list.forEach(r=>{const k=lecKey(r.lec);keyCount.set(k,(keyCount.get(k)||0)+1)});
+ const keys=[...keyCount.keys()].filter(Boolean).sort((a,b)=>keyCount.get(b)-keyCount.get(a));
+ const reps=[],map=new Map();
+ for(const k of keys){
+  const hit=reps.find(c=>c===k||(k.length>=7&&c.length>=7&&lev(k,c,k.length>=14?2:1)<=(k.length>=14?2:1)));
+  if(hit){map.set(k,hit)}else{reps.push(k);map.set(k,k)}
+ }
+ const groups=new Map();
+ list.forEach(r=>{
+  const k=lecKey(r.lec),g=k?map.get(k):"";
+  if(!groups.has(g))groups.set(g,{rows:[],raw:new Map()});
+  const o=groups.get(g);o.rows.push(r);
+  const t=tidy(r.lec);if(t)o.raw.set(t,(o.raw.get(t)||0)+1);
+ });
+ return [...groups.entries()].map(([k,o])=>{
+  const vs=[...o.raw.entries()].sort((a,b)=>b[1]-a[1]||b[0].length-a[0].length);
+  const titled=vs.find(v=>/^(Dr\.|Prof\.|Mr\.|Madam)\s/.test(v[0]));
+  return{label:k?(titled||vs[0])[0]:"Lecturer not stated",variants:vs.map(v=>v[0]),rows:o.rows};
+ }).sort((a,b)=>a.label.localeCompare(b.label,undefined,{sensitivity:"base"}));
+}
+$("print").onclick=async()=>{
+ say($("dlmsg"),"Preparing print list…");$("print").disabled=true;
+ try{
+  const list=await fetchAll();if(!list.length)return say($("dlmsg"),"Nothing to print.");
   const v=$("fScope").value,scope=v==="all"?"All schools":v==="school"?$("fSchool").value:$("fSchool").value+" – "+$("fDept").value;
-  const by={};list.forEach(r=>{const k=r.lec||"(no lecturer)";(by[k]=by[k]||[]).push(r)});
-  const parts=Object.keys(by).sort().map(k=>{
-    const rs=by[k].sort((a,b)=>(a.unit||"").localeCompare(b.unit||"")||(a.reg||"").localeCompare(b.reg||""));
-    return `<div class="lecgrp"><h2>Lecturer: ${esc(k)}</h2><table><thead><tr><th>#</th><th>Unit</th><th>Reg. No.</th><th>Name</th><th>School / Department</th><th>Semester</th><th>Exam time</th></tr></thead><tbody>${rs.map((r,i)=>`<tr><td>${i+1}</td><td>${esc(r.unit)}</td><td>${esc(r.reg)}</td><td>${esc(r.name)}</td><td>${esc(r.school)} / ${esc(r.dept)}</td><td>${esc(r.sem)}</td><td>${esc(r.time)}</td></tr>`).join("")}</tbody></table></div>`}).join("");
-  $("printArea").innerHTML=`<h1>Missing / Special Marks Requests</h1><div>${esc(scope)} &middot; ${list.length} request(s) &middot; printed ${esc(new Date().toLocaleDateString())}</div>${parts}`;
-  try{window.print()}catch(e){say($("dlmsg"),"Printing is not available here. Download the spreadsheet and print it instead.","err")}
-};
-$("refresh").onclick=()=>sbLoadRecords().catch(e=>say($("dlmsg"),e.message,"err"));
-$("login").onclick=async()=>{
-  say($("loginMsg"),"Signing in…");
-  try{
-    const r=await fetch(SB+"/auth/v1/token?grant_type=password",{method:"POST",headers:{apikey:SUPABASE_ANON_KEY,"Content-Type":"application/json"},body:JSON.stringify({email:$("lemail").value.trim(),password:$("lpass").value})});
-    const j=await r.json();if(!r.ok)throw new Error(j.msg||j.error_description||"Sign-in failed");
-    token=j.access_token;$("lpass").value="";$("loginCard").hidden=true;$("adminCard").hidden=false;$("refresh").hidden=false;
-    await sbLoadRecords();
-  }catch(e){say($("loginMsg"),e.message,"err")}
+  const groups=groupLecturers(list);
+  const parts=groups.map(g=>{
+   const rs=g.rows.sort((a,b)=>(a.unit||"").localeCompare(b.unit||"",undefined,{numeric:true})||(a.reg||"").localeCompare(b.reg||"",undefined,{numeric:true}));
+   const vtxt=g.variants.length>1?`<div class="v">Also written as: ${g.variants.filter(x=>x!==g.label).map(esc).join("; ")}</div>`:"";
+   return `<div class="lecgrp"><h2>Lecturer: ${esc(g.label)} (${rs.length})</h2>${vtxt}<table><thead><tr><th>#</th><th>Unit</th><th>Reg. No.</th><th>Name</th><th>School / Department</th><th>Semester</th><th>Exam time</th></tr></thead><tbody>${rs.map((r,i)=>`<tr><td>${i+1}</td><td>${esc(r.unit)}</td><td>${esc(r.reg)}</td><td>${esc(r.name)}</td><td>${esc(r.school)} / ${esc(r.dept)}</td><td>${esc(r.sem)}</td><td>${esc(r.time)}</td></tr>`).join("")}</tbody></table></div>`;
+  }).join("");
+  $("printArea").innerHTML=`<h1>Missing / Special Marks Requests</h1><div>${esc(scope)} &middot; ${list.length} request(s) &middot; ${groups.length} lecturer(s) &middot; printed ${esc(new Date().toLocaleDateString())}</div>${parts}`;
+  say($("dlmsg"),"");
+  window.print();
+ }catch(e){say($("dlmsg"),"Print failed: "+e.message,"err")}
+ $("print").disabled=!total;
 };
 
-// ----- share + deadline
-const shareText="Missing marks? Submit your details before the deadline (Tue 10 Nov 2026, 1:00 PM): "+location.href;
-$("wa").href="https://wa.me/?text="+encodeURIComponent(shareText);
-$("copyLink").onclick=async()=>{try{await navigator.clipboard.writeText(location.href);say($("shareMsg"),"Link copied.","ok")}catch(e){say($("shareMsg"),"Copy this page\u2019s link from your browser\u2019s address bar.")}};
+// ---------- sign in
+$("login").onclick=async()=>{
+ say($("loginMsg"),"Signing in…");
+ try{
+  const r=await fetch(SB+"/auth/v1/token?grant_type=password",{method:"POST",headers:{apikey:SUPABASE_ANON_KEY,"Content-Type":"application/json"},body:JSON.stringify({email:$("lemail").value.trim(),password:$("lpass").value})});
+  const j=await r.json();if(!r.ok)throw new Error(j.msg||j.error_description||"Sign-in failed");
+  token=j.access_token;$("lpass").value="";$("loginCard").hidden=true;say($("loginMsg"),"");
+  await loadPage();
+ }catch(e){say($("loginMsg"),e.message,"err")}
+};
+
+// ---------- share, deadline, theme
+$("wa").href="https://wa.me/?text="+encodeURIComponent("Missing marks? Submit your details before the deadline (Tue 10 Nov 2026, 1:00 PM): "+location.href);
+$("copyLink").onclick=async()=>{try{await navigator.clipboard.writeText(location.href);say($("shareMsg"),"Link copied.","ok")}catch(e){say($("shareMsg"),"Copy the link from your browser’s address bar.")}};
 function tick(){
-  const ms=DEADLINE-Date.now(),el=$("countdown");
-  if(ms<=0){el.textContent="Submissions are closed.";$("addRec").disabled=true;return}
-  const d=Math.floor(ms/864e5),h=Math.floor(ms%864e5/36e5),m=Math.floor(ms%36e5/6e4);
-  el.textContent=`Time left: ${d?d+"d ":""}${h}h ${m}m`;
+ const ms=DEADLINE-Date.now(),el=$("countdown");
+ if(ms<=0){el.textContent="Submissions are closed.";$("addRec").disabled=true;return}
+ const d=Math.floor(ms/864e5),h=Math.floor(ms%864e5/36e5),m=Math.floor(ms%36e5/6e4);
+ el.textContent=`Time left: ${d?d+"d ":""}${h}h ${m}m`;
 }
 tick();setInterval(tick,30000);
-
-// ----- theme (default: light with blue text)
 function setTheme(t,save){
-  document.documentElement.setAttribute("data-theme",t);
-  $("themeBtn").textContent=t==="dark"?"☀ Light mode":"🌙 Dark mode";
-  if(save){try{localStorage.setItem("msm-theme",t)}catch(e){}}
+ document.documentElement.setAttribute("data-theme",t);
+ $("themeBtn").textContent=t==="dark"?"☀ Light mode":"🌙 Dark mode";
+ if(save){try{localStorage.setItem("msm-theme",t)}catch(e){}}
 }
 let saved=null;try{saved=localStorage.getItem("msm-theme")}catch(e){}
 setTheme(saved==="dark"?"dark":"light");
 $("themeBtn").onclick=()=>setTheme(document.documentElement.getAttribute("data-theme")==="dark"?"light":"dark",true);
 
-// ----- boot
-rebuildCatalog([]);resetUnits();$("adminCard").hidden=false;renderRecords();
-if(mode==="sb"){
-  $("adminCard").hidden=false;$("refresh").hidden=false;sbLoadCatalog();sbLoadRecords().catch(e=>say($("dlmsg"),"Could not load records: "+e.message,"err"));
-  const showLogin=()=>{$("loginCard").hidden=!!token||location.hash!=="#reps"};
-  showLogin();window.addEventListener("hashchange",showLogin);
-}
-(async()=>{
-  if(mode==="sb")return;
-  try{
-    const [d,user]=await Promise.all([claude.use("db"),claude.use("user")]);
-    if(!d)return;
-    db=d;localMode=false;modeNow="claude";
-    try{uid=user?await user.id():null}catch(e){}
-    isAdmin=!!(user&&(user.isOwner()||user.canEdit()));
-    $("adminCard").hidden=!isAdmin;
-    db.collection("schools").onSnapshot(s=>{dbDocs=s.docs;rebuildCatalog(dbDocs)},()=>{});
-    if(isAdmin)db.collection("records").onSnapshot(s=>{
-      records=s.docs.flatMap(x=>(x.data().items||[]).filter(i=>i&&typeof i==="object")).sort((a,b)=>(a.ts||0)-(b.ts||0));renderRecords()},()=>{});
-  }catch(e){}
-})();
+// ---------- boot
+rebuildCatalog([]);resetUnits();loadCatalog();draw();loadPage();
+const showLogin=()=>{$("loginCard").hidden=!!token||location.hash!=="#reps"};
+showLogin();window.addEventListener("hashchange",showLogin);
 </script>
 </body>
 </html>
