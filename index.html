@@ -64,7 +64,7 @@ a.btn.primary{background:var(--accent);color:var(--accent-t);border-color:var(--
 </header>
 
 <div class="card notice">
- <strong>Deadline: Tuesday, 10 November 2026 at 1:00 PM</strong>
+ <strong id="dlText"></strong>
  <span class="cd" id="countdown"></span>
  <p style="margin-top:6px">Submit before the deadline. After that the form closes and your request can&rsquo;t be included in what goes to lecturers.</p>
 </div>
@@ -163,7 +163,7 @@ a.btn.primary{background:var(--accent);color:var(--accent-t);border-color:var(--
 <script>
 const SUPABASE_URL="https://vdiljdqgbkuugmgdqhvq.supabase.co";
 const SUPABASE_ANON_KEY="sb_publishable_gwAGNlvc1h7WqxFO_agjMQ_29ci2FYE";
-const DEADLINE=new Date("2026-11-10T13:00:00+03:00");
+const DEADLINE=new Date("2026-11-11T17:00:00+03:00");  // change deadline when needed
 const PAGE=100,NEW="__new__";
 const SEMS={"Sem 1 2026":"Jan - Apr 2026","Sem 2 2026":"May - Aug 2026"};
 const BUILTIN={
@@ -482,8 +482,14 @@ $("login").onclick=async()=>{
 };
 
 // ---------- share, deadline, theme
-$("wa").href="https://wa.me/?text="+encodeURIComponent("Missing marks? Submit your details before the deadline (Tue 10 Nov 2026, 1:00 PM): "+location.href);
+const fmtDL=(opts)=>DEADLINE.toLocaleString("en-GB",{...opts,timeZone:"Africa/Nairobi"});
+const dlLong=fmtDL({weekday:"long",day:"numeric",month:"long",year:"numeric",hour:"numeric",minute:"2-digit"});
+const dlShort=fmtDL({weekday:"short",day:"numeric",month:"short",year:"numeric",hour:"numeric",minute:"2-digit"});
+
+$("dlText").textContent="Deadline: "+dlLong;
+$("wa").href="https://wa.me/?text="+encodeURIComponent("Missing marks? Submit your details before the deadline ("+dlShort+"): "+location.href);
 $("copyLink").onclick=async()=>{try{await navigator.clipboard.writeText(location.href);say($("shareMsg"),"Link copied.","ok")}catch(e){say($("shareMsg"),"Copy the link from your browser’s address bar.")}};
+
 function tick(){
  const ms=DEADLINE-Date.now(),el=$("countdown");
  if(ms<=0){el.textContent="Submissions are closed.";$("addRec").disabled=true;return}
@@ -491,6 +497,7 @@ function tick(){
  el.textContent=`Time left: ${d?d+"d ":""}${h}h ${m}m`;
 }
 tick();setInterval(tick,30000);
+
 function setTheme(t,save){
  document.documentElement.setAttribute("data-theme",t);
  $("themeBtn").textContent=t==="dark"?"☀ Light mode":"🌙 Dark mode";
