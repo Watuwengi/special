@@ -123,7 +123,7 @@ a.btn.primary{background:var(--accent);color:var(--accent-t);border-color:var(--
  <h2>Admin</h2>
  <div id="aSignIn">
   <div class="grid">
-   <div><label for="aEmail">Email</label><input id="aEmail" type="email" value="hello@aquilawilfred.dev" readonly></div>
+   <div><label for="aEmail">Email</label><input id="aEmail" type="email" autocomplete="username" placeholder="Admin email"></div>
    <div><label for="aPass">Password</label><input id="aPass" type="password" autocomplete="current-password"></div>
   </div>
   <div class="row"><button type="button" class="primary" id="aGo">Sign in</button></div>
@@ -563,7 +563,7 @@ $("adminBtn").onclick=()=>{const p=$("adminPanel");p.hidden=!p.hidden;if(!p.hidd
 $("aGo").onclick=async()=>{
  say($("aMsg"),"Signing in…");
  try{
-  const r=await fetch(SB+"/auth/v1/token?grant_type=password",{method:"POST",headers:{apikey:SUPABASE_ANON_KEY,"Content-Type":"application/json"},body:JSON.stringify({email:"hello@aquilawilfred.dev",password:$("aPass").value})});
+  const r=await fetch(SB+"/auth/v1/token?grant_type=password",{method:"POST",headers:{apikey:SUPABASE_ANON_KEY,"Content-Type":"application/json"},body:JSON.stringify({email:$("aEmail").value.trim(),password:$("aPass").value})});
   const j=await r.json();if(!r.ok)throw new Error(j.msg||j.error_description||"Sign-in failed");
   token=j.access_token;$("aPass").value="";say($("aMsg"),"Signed in.","ok");
   await loadSettings();adminUI();loadPage();
