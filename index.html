@@ -46,6 +46,14 @@ details.tips code{background:var(--bg);padding:1px 5px;border-radius:4px;color:v
 a.btn{display:inline-block;text-decoration:none;border:1px solid var(--line);background:var(--card);color:var(--text);padding:9px 14px;border-radius:8px}
 a.btn.primary{background:var(--accent);color:var(--accent-t);border-color:var(--accent)}
 #printArea{display:none}
+.tg{position:relative;display:inline-block;width:68px;height:36px;flex:none}
+.tg input{position:absolute;opacity:0;width:0;height:0}
+.trk{position:absolute;inset:0;background:#c0392b;border-radius:36px;cursor:pointer;transition:background .2s}
+.trk:before{content:"";position:absolute;width:28px;height:28px;left:4px;top:4px;background:#fff;border-radius:50%;box-shadow:0 1px 3px rgba(0,0,0,.4);transition:transform .2s}
+.tg input:checked+.trk{background:#1a9b57}
+.tg input:checked+.trk:before{transform:translateX(32px)}
+.tg input:focus-visible+.trk{outline:3px solid var(--accent);outline-offset:2px}
+#swState.on{color:#1a9b57}#swState.off{color:#e5594a}
 @media print{
  body{background:#fff;color:#000}.wrap{display:none!important}
  #printArea{display:block!important;font:12px/1.4 system-ui,sans-serif;color:#000}
@@ -122,10 +130,14 @@ a.btn.primary{background:var(--accent);color:var(--accent-t);border-color:var(--
  </div>
  <div id="aSwitchBox" hidden>
   <div class="row" style="margin-top:0;gap:14px">
-   <input type="checkbox" id="sw" style="width:46px;height:26px;accent-color:var(--accent);cursor:pointer" aria-label="Accept submissions">
-   <strong id="swState"></strong>
+   <label class="tg"><input type="checkbox" id="sw" aria-label="Accept submissions"><span class="trk"></span></label>
+   <strong id="swState" style="font-size:17px"></strong>
   </div>
-  <p class="note" style="margin-top:8px">Switch off to stop accepting data straight away. Switch on to accept it again.</p>
+  <p class="note" style="margin-top:8px">Green = accepting data. Red = closed, nothing is accepted. Slide the switch to change it.</p>
+  <div class="note" id="aDlInfo" style="margin-top:10px"></div>
+  <label for="aDl" style="margin-top:12px">New deadline (Nairobi time)</label>
+  <input id="aDl" type="datetime-local" step="60">
+  <div class="row"><button type="button" class="primary" id="aDlGo">Set deadline &amp; open</button></div>
   <div class="row"><button type="button" id="aOut">Sign out</button></div>
  </div>
  <div class="msg" id="aMsg"></div>
@@ -540,8 +552,11 @@ $("themeBtn").onclick=()=>setTheme(document.documentElement.getAttribute("data-t
 // ---------- admin switch (sign in, then open/close the form)
 function adminUI(){
  $("aSignIn").hidden=!!token;$("aSwitchBox").hidden=!token;
- $("sw").checked=!CLOSED;
- $("swState").textContent=CLOSED?"Closed: not accepting data":"Open: accepting data";
+ const isOpen=!CLOSED&&DEADLINE-Date.now()>0;
+ $("sw").checked=isOpen;
+ $("swState").textContent=isOpen?"OPEN: accepting data":"CLOSED: not accepting data";
+ $("swState").className=isOpen?"on":"off";
+ $("aDlInfo").textContent="Current deadline: "+fmtDL({weekday:"short",day:"numeric",month:"short",year:"numeric",hour:"numeric",minute:"2-digit"})+(DEADLINE-Date.now()<=0?" (already passed)":"");
  $("adminBtn").textContent=token?"🔓 Admin":"🔒 Admin";
 }
 $("adminBtn").onclick=()=>{const p=$("adminPanel");p.hidden=!p.hidden;if(!p.hidden){adminUI();p.scrollIntoView({behavior:"smooth",block:"center"})}};
@@ -556,12 +571,21 @@ $("aGo").onclick=async()=>{
 };
 $("sw").onchange=async()=>{
  const open=$("sw").checked;
- if(open&&DEADLINE-Date.now()<=0){$("sw").checked=false;return say($("aMsg"),"The deadline has passed, so the form would stay closed. Set a new deadline first (form-control page or Supabase).","err")}
+ if(open&&DEADLINE-Date.now()<=0){$("sw").checked=false;return say($("aMsg"),"The deadline has passed. Pick a new deadline below and press “Set deadline & open”.","err")}
  try{
   await sbFetch("/rest/v1/settings?on_conflict=key",{method:"POST",headers:{Prefer:"resolution=merge-duplicates,return=minimal"},body:JSON.stringify([{key:"closed",value:open?"false":"true"}])});
   CLOSED=!open;paintDeadline();adminUI();
   say($("aMsg"),open?"The form is open again.":"The form is closed. No more data will be accepted.","ok");
  }catch(e){$("sw").checked=!open;say($("aMsg"),"Could not change it: "+e.message,"err")}
+};
+$("aDlGo").onclick=async()=>{
+ const v=$("aDl").value;if(!v)return say($("aMsg"),"Pick a date and time first.","err");
+ const iso=v+":00+03:00";if(new Date(iso)<=new Date())return say($("aMsg"),"That time has already passed. Pick a future time.","err");
+ try{
+  await sbFetch("/rest/v1/settings?on_conflict=key",{method:"POST",headers:{Prefer:"resolution=merge-duplicates,return=minimal"},body:JSON.stringify([{key:"deadline",value:iso},{key:"closed",value:"false"}])});
+  DEADLINE=new Date(iso);CLOSED=false;paintDeadline();adminUI();
+  say($("aMsg"),"Done. The form is open until the new deadline.","ok");
+ }catch(e){say($("aMsg"),"Could not save: "+e.message,"err")}
 };
 $("aOut").onclick=()=>{token=null;adminUI();say($("aMsg"),"Signed out.");loadPage()};
 
