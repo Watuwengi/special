@@ -483,7 +483,7 @@ $("login").onclick=async()=>{
 
 // ---------- share, deadline, theme
 const fmtDL=(opts)=>DEADLINE.toLocaleString("en-GB",{...opts,timeZone:"Africa/Nairobi"});
-const dlLong=fmtDL({weekday:"long",day:"numeric",month:"long",year:"numeric",hour:"numeric",minute:"2-digit"});
+const dlLong=fmtDL({weekday:"long",day:"numeric",month:"long",year:"numeric",hour:"numeric",minute:"2-digit",second:"2-digit"});
 const dlShort=fmtDL({weekday:"short",day:"numeric",month:"short",year:"numeric",hour:"numeric",minute:"2-digit"});
 
 $("dlText").textContent="Deadline: "+dlLong;
@@ -493,10 +493,10 @@ $("copyLink").onclick=async()=>{try{await navigator.clipboard.writeText(location
 function tick(){
  const ms=DEADLINE-Date.now(),el=$("countdown");
  if(ms<=0){el.textContent="Submissions are closed.";$("addRec").disabled=true;return}
- const d=Math.floor(ms/864e5),h=Math.floor(ms%864e5/36e5),m=Math.floor(ms%36e5/6e4);
- el.textContent=`Time left: ${d?d+"d ":""}${h}h ${m}m`;
+ const d=Math.floor(ms/864e5),h=Math.floor(ms%864e5/36e5),m=Math.floor(ms%36e5/6e4),s=Math.floor(ms%6e4/1e3);
+ el.textContent=`Time left: ${d?d+"d ":""}${h}h ${m}m ${s}s`;
 }
-tick();setInterval(tick,30000);
+tick();setInterval(tick,1000);
 
 function setTheme(t,save){
  document.documentElement.setAttribute("data-theme",t);
