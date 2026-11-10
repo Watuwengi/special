@@ -60,7 +60,7 @@ a.btn.primary{background:var(--accent);color:var(--accent-t);border-color:var(--
 <div class="wrap">
 <header>
  <div><h1>Missing &amp; Special Marks Form</h1><p class="sub">For students with missing marks or special exam results.</p></div>
- <button type="button" id="themeBtn" aria-label="Switch colour theme"></button>
+ <div class="row" style="margin:0;flex-wrap:nowrap"><button type="button" id="adminBtn">🔒 Admin</button><button type="button" id="themeBtn" aria-label="Switch colour theme" style="white-space:nowrap"></button></div>
 </header>
 
 <div class="card notice">
@@ -109,6 +109,26 @@ a.btn.primary{background:var(--accent);color:var(--accent-t);border-color:var(--
  <h2>Submit</h2>
  <div class="row" style="margin-top:0"><button type="button" class="primary" id="addRec">Submit</button><button type="button" id="clear">Clear form</button></div>
  <div class="msg" id="msg"></div>
+</div>
+
+<div class="card" id="adminPanel" hidden>
+ <h2>Admin</h2>
+ <div id="aSignIn">
+  <div class="grid">
+   <div><label for="aEmail">Email</label><input id="aEmail" type="email" value="hello@aquilawilfred.dev" readonly></div>
+   <div><label for="aPass">Password</label><input id="aPass" type="password" autocomplete="current-password"></div>
+  </div>
+  <div class="row"><button type="button" class="primary" id="aGo">Sign in</button></div>
+ </div>
+ <div id="aSwitchBox" hidden>
+  <div class="row" style="margin-top:0;gap:14px">
+   <input type="checkbox" id="sw" style="width:46px;height:26px;accent-color:var(--accent);cursor:pointer" aria-label="Accept submissions">
+   <strong id="swState"></strong>
+  </div>
+  <p class="note" style="margin-top:8px">Switch off to stop accepting data straight away. Switch on to accept it again.</p>
+  <div class="row"><button type="button" id="aOut">Sign out</button></div>
+ </div>
+ <div class="msg" id="aMsg"></div>
 </div>
 
 <div class="card" id="loginCard" hidden>
@@ -163,7 +183,7 @@ a.btn.primary{background:var(--accent);color:var(--accent-t);border-color:var(--
 <script>
 const SUPABASE_URL="https://vdiljdqgbkuugmgdqhvq.supabase.co";
 const SUPABASE_ANON_KEY="sb_publishable_gwAGNlvc1h7WqxFO_agjMQ_29ci2FYE";
-const DEADLINE=new Date("2026-11-11T17:00:00+03:00");  // change deadline when needed
+let DEADLINE=new Date("2026-11-10T13:00:00+03:00"),CLOSED=false;   // overridden by the settings table (see admin page)
 const PAGE=100,NEW="__new__";
 const SEMS={"Sem 1 2026":"Jan - Apr 2026","Sem 2 2026":"May - Aug 2026"};
 const BUILTIN={
@@ -260,7 +280,7 @@ async function insertRecs(rows){
  catch(e){if(/row-level|polic|permission/i.test(e.message)){await sbFetch(url,{method:"POST",headers:{Prefer:"resolution=ignore-duplicates,return=minimal"},body});return null}throw e}
 }
 $("addRec").onclick=async()=>{
- if(Date.now()>DEADLINE)return say($("msg"),"Sorry, the deadline has passed and the form is closed.","err");
+ if(CLOSED||Date.now()>DEADLINE)return say($("msg"),"Sorry, the deadline has passed and the form is closed.","err");
  const reg=normReg($("reg").value),name=clean($("name").value);
  let school=$("school").value,dept=$("dept").value,addCat=false;
  if(school===NEW){school=clean($("newSchool").value);dept=clean($("newDept").value);
@@ -482,22 +502,32 @@ $("login").onclick=async()=>{
 };
 
 // ---------- share, deadline, theme
-const fmtDL=(opts)=>DEADLINE.toLocaleString("en-GB",{...opts,timeZone:"Africa/Nairobi"});
-const dlLong=fmtDL({weekday:"long",day:"numeric",month:"long",year:"numeric",hour:"numeric",minute:"2-digit",second:"2-digit"});
-const dlShort=fmtDL({weekday:"short",day:"numeric",month:"short",year:"numeric",hour:"numeric",minute:"2-digit"});
-
-$("dlText").textContent="Deadline: "+dlLong;
-$("wa").href="https://wa.me/?text="+encodeURIComponent("Missing marks? Submit your details before the deadline ("+dlShort+"): "+location.href);
 $("copyLink").onclick=async()=>{try{await navigator.clipboard.writeText(location.href);say($("shareMsg"),"Link copied.","ok")}catch(e){say($("shareMsg"),"Copy the link from your browser’s address bar.")}};
-
+const fmtDL=o=>DEADLINE.toLocaleString("en-GB",{...o,timeZone:"Africa/Nairobi"});
+function paintDeadline(){
+ $("dlText").textContent=CLOSED?"Submissions are closed":"Deadline: "+fmtDL({weekday:"long",day:"numeric",month:"long",year:"numeric",hour:"numeric",minute:"2-digit"});
+ $("wa").href="https://wa.me/?text="+encodeURIComponent("Missing marks? Submit your details before the deadline ("+fmtDL({weekday:"short",day:"numeric",month:"short",year:"numeric",hour:"numeric",minute:"2-digit"})+"): "+location.href);
+ $("addRec").disabled=CLOSED||DEADLINE-Date.now()<=0;
+ tick();
+}
 function tick(){
  const ms=DEADLINE-Date.now(),el=$("countdown");
- if(ms<=0){el.textContent="Submissions are closed.";$("addRec").disabled=true;return}
+ if(CLOSED||ms<=0){el.textContent="Submissions are closed.";return}
  const d=Math.floor(ms/864e5),h=Math.floor(ms%864e5/36e5),m=Math.floor(ms%36e5/6e4),s=Math.floor(ms%6e4/1e3);
  el.textContent=`Time left: ${d?d+"d ":""}${h}h ${m}m ${s}s`;
 }
-tick();setInterval(tick,1000);
-
+async function loadSettings(){
+ try{
+  const rows=await sbFetch("/rest/v1/settings?select=key,value");
+  (rows||[]).forEach(r=>{
+   if(r.key==="deadline"&&r.value){const d=new Date(r.value);if(!isNaN(d))DEADLINE=d}
+   if(r.key==="closed")CLOSED=r.value==="true";
+  });
+ }catch(e){}
+ paintDeadline();
+}
+paintDeadline();setInterval(tick,1000);
+loadSettings();setInterval(loadSettings,60000);
 function setTheme(t,save){
  document.documentElement.setAttribute("data-theme",t);
  $("themeBtn").textContent=t==="dark"?"☀ Light mode":"🌙 Dark mode";
@@ -506,6 +536,34 @@ function setTheme(t,save){
 let saved=null;try{saved=localStorage.getItem("msm-theme")}catch(e){}
 setTheme(saved==="dark"?"dark":"light");
 $("themeBtn").onclick=()=>setTheme(document.documentElement.getAttribute("data-theme")==="dark"?"light":"dark",true);
+
+// ---------- admin switch (sign in, then open/close the form)
+function adminUI(){
+ $("aSignIn").hidden=!!token;$("aSwitchBox").hidden=!token;
+ $("sw").checked=!CLOSED;
+ $("swState").textContent=CLOSED?"Closed: not accepting data":"Open: accepting data";
+ $("adminBtn").textContent=token?"🔓 Admin":"🔒 Admin";
+}
+$("adminBtn").onclick=()=>{const p=$("adminPanel");p.hidden=!p.hidden;if(!p.hidden){adminUI();p.scrollIntoView({behavior:"smooth",block:"center"})}};
+$("aGo").onclick=async()=>{
+ say($("aMsg"),"Signing in…");
+ try{
+  const r=await fetch(SB+"/auth/v1/token?grant_type=password",{method:"POST",headers:{apikey:SUPABASE_ANON_KEY,"Content-Type":"application/json"},body:JSON.stringify({email:"hello@aquilawilfred.dev",password:$("aPass").value})});
+  const j=await r.json();if(!r.ok)throw new Error(j.msg||j.error_description||"Sign-in failed");
+  token=j.access_token;$("aPass").value="";say($("aMsg"),"Signed in.","ok");
+  await loadSettings();adminUI();loadPage();
+ }catch(e){say($("aMsg"),e.message,"err")}
+};
+$("sw").onchange=async()=>{
+ const open=$("sw").checked;
+ if(open&&DEADLINE-Date.now()<=0){$("sw").checked=false;return say($("aMsg"),"The deadline has passed, so the form would stay closed. Set a new deadline first (form-control page or Supabase).","err")}
+ try{
+  await sbFetch("/rest/v1/settings?on_conflict=key",{method:"POST",headers:{Prefer:"resolution=merge-duplicates,return=minimal"},body:JSON.stringify([{key:"closed",value:open?"false":"true"}])});
+  CLOSED=!open;paintDeadline();adminUI();
+  say($("aMsg"),open?"The form is open again.":"The form is closed. No more data will be accepted.","ok");
+ }catch(e){$("sw").checked=!open;say($("aMsg"),"Could not change it: "+e.message,"err")}
+};
+$("aOut").onclick=()=>{token=null;adminUI();say($("aMsg"),"Signed out.");loadPage()};
 
 // ---------- boot
 rebuildCatalog([]);resetUnits();loadCatalog();draw();loadPage();
